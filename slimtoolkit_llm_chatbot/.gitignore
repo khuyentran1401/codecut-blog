@@ -1,0 +1,7 @@
+.venv/
+.chainlit/
+__pycache__/
+.env
+*.report.json
+*.top.json
+chainlit.md
