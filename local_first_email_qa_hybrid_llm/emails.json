@@ -1,0 +1,37 @@
+[
+  {
+    "email_id": "email_001",
+    "sender": "Alex",
+    "sent_at": "2024-07-10",
+    "subject": "Recommendation feature launch",
+    "body": "Hey Jordan, can you deploy the recommendation feature to the test server before July 18? Sam is sending you the final mockups today. We also need a NimbusCloud compute budget for Q3; ballpark is $3,200 per month, can you confirm that number?"
+  },
+  {
+    "email_id": "email_002",
+    "sender": "Jordan",
+    "sent_at": "2024-07-15",
+    "subject": "Re: Recommendation feature launch",
+    "body": "Will do on the deployment. On the compute budget, Meridian Analytics is asking for a formal sign-off before I submit the purchase request. Can you confirm the $3,200 per month is approved so I can move forward?"
+  },
+  {
+    "email_id": "email_003",
+    "sender": "Alex",
+    "sent_at": "2024-07-19",
+    "subject": "Re: Recommendation feature launch",
+    "body": "Compute budget confirmed at $3,200 per month, go ahead and submit. Also Sam just flagged she is still waiting on your feedback on the mockups. Can you send her comments by July 22?"
+  },
+  {
+    "email_id": "email_004",
+    "sender": "Sam",
+    "sent_at": "2024-07-21",
+    "subject": "Updated mockups",
+    "body": "Just a heads up, I updated the mockup colors based on Jordan's feedback. The new version is in the design folder. Jordan, does this work for the July 22 review or do you need more time?"
+  },
+  {
+    "email_id": "email_005",
+    "sender": "Jordan",
+    "sent_at": "2024-07-23",
+    "subject": "Re: Updated mockups",
+    "body": "Colors look great Sam, no extra time needed. Deployment to the test server is on track for July 25. One thing: the recommendation model needs a $500 budget for extra compute during the load test. Alex, can you approve that?"
+  }
+]
