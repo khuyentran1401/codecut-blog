@@ -20,8 +20,8 @@ where the flag mattered from the ones where it changed nothing.
 
 | Condition | Multi-step | Single-step | Total | Time |
 | --- | ---: | ---: | ---: | ---: |
-| Plain | 3 / 8 | 4 / 4 | 7 / 12 | 4.5s |
-| Thinking | 8 / 8 | 4 / 4 | 12 / 12 | 161.4s |
+| Plain | 3 / 8 | 4 / 4 | 7 / 12 | 8.36s |
+| Thinking | 8 / 8 | 4 / 4 | 12 / 12 | 141.12s |
 
 ---
 
