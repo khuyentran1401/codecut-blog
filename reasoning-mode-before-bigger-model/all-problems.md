@@ -1,12 +1,14 @@
 # All Twelve Problems: Prompts and Results
 
-Companion data for [Before You Reach for a Bigger Model, Turn On Thinking](https://codecut.ai/reasoning-mode-before-bigger-model/).
+Companion data for [Before You Upgrade the Model, Try Thinking Mode](https://codecut.ai/before-you-upgrade-the-model-try-thinking-mode/).
 
-Every problem was run three times per mode with `qwen3:30b-a3b` under Ollama
-0.32.8. The plain arm used greedy decoding (`temperature=0`). The thinking arm
-used Qwen's documented settings for thinking mode (`temperature=0.6`,
-`top_p=0.95`, `top_k=20`). All three seeds produced identical answers in both
-modes, so a single value is shown for each.
+The runnable benchmark code is in
+[`run_reasoning_mode_benchmark.py`](run_reasoning_mode_benchmark.py).
+
+Every problem was run once per mode with seed `0` using `qwen3:30b-a3b` under
+Ollama 0.32.8. The plain arm used greedy decoding (`temperature=0`). The
+thinking arm used Qwen's recommended settings for thinking mode
+(`temperature=0.6`, `top_p=0.95`, `top_k=20`, `min_p=0.0`).
 
 Each problem is tagged **multi-step** if answering requires carrying a running
 value through a sequence, and **single-step** if one calculation is enough.
@@ -18,10 +20,10 @@ where the flag mattered from the ones where it changed nothing.
 
 ## Totals
 
-| Condition | Multi-step | Single-step | Total | Time |
-| --- | ---: | ---: | ---: | ---: |
-| Plain | 3 / 8 | 4 / 4 | 7 / 12 | 8.36s |
-| Thinking | 8 / 8 | 4 / 4 | 12 / 12 | 141.12s |
+| Condition | Multi-step | Single-step | Total | Total Time | Average Time |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Plain | 3 / 8 | 4 / 4 | 7 / 12 | 8.36s | 0.70s |
+| Thinking | 8 / 8 | 4 / 4 | 12 / 12 | 141.12s | 11.76s |
 
 ---
 
@@ -35,7 +37,7 @@ Every one is multi-step, and thinking mode fixed every one.
 | 2 | `split-discrepancy` | multi | 0.10 | 0.00 ✗ | 0.10 ✓ |
 | 3 | `installment-fees` | multi | 120.00 | 360.00 ✗ | 120.00 ✓ |
 | 4 | `unspent-after-refund` | multi | 18,700.00 | 17,500.00 ✗ | 18,700.00 ✓ |
-| 5 | `which-deposit` | multi | 2,500.00 | varies by seed ✗ | 2,500.00 ✓ |
+| 5 | `which-deposit` | multi | 2,500.00 | 2,000.00 ✗ | 2,500.00 ✓ |
 
 ## Prompts and answers
 
@@ -60,7 +62,7 @@ How many dollars are left unspent? Answer to 2 decimal places.
 ```text
 A parent transaction of $1,000.00 was split into these children:
   8.84, 86.18, 74.53, 74.53, 20.64, 12.61, 1.49, 1.49, 719.59
-By how many dollars do the children fail to sum to the parent?
+What is the difference between the parent amount and the total of the children?
 Answer the absolute difference, to 2 decimal places.
 ```
 
@@ -106,13 +108,13 @@ Answer to 2 decimal places.
 ```
 
 - **Correct answer**: `2,500.00`
-- **Plain**: `varies by seed: 1,500.00, 2,000.00`  ✗
+- **Plain**: `2,000.00`  ✗
 - **Thinking**: `2,500.00`
 
 ## Why the plain model failed on these
 
-Every question here needs an intermediate value carried from one operation to
-the next. Every wrong answer is what a single pass produces instead:
+The pattern is consistent: each question needs a value from an earlier step,
+and each wrong answer leaves out that step.
 
 | Problem | Plain answered | The single pass that produces it |
 | --- | ---: | --- |
@@ -120,23 +122,14 @@ the next. Every wrong answer is what a single pass produces instead:
 | `split-discrepancy` | `0.00` | Assume the split balances, which splits usually do |
 | `installment-fees` | `360.00` | `$4,800 × 2.5% × 3`, the rate on the invoice rather than on each installment |
 | `unspent-after-refund` | `17,500.00` | `$26,000 − $5,000 − $3,500`, stopping before the refund |
-| `which-deposit` | varies | No stable procedure at all, so the answer moves between seeds |
-
-Two of these land on `$0.00`, which is also the answer these questions normally
-have. That makes them the hardest to catch: the output is exactly what you would
-see if nothing were wrong.
-
-The other two are worse in a different way. `$360.00` and `$17,500.00` are the
-right order of magnitude and look calculated, because they partly are. Neither
-would look suspicious in a report.
+| `which-deposit` | `2,000.00` | Carries the deposit balance incorrectly after the first charge |
 
 ---
 
 # Group 2: Both Modes Got These Right (7)
 
-Thinking mode changed nothing here. The four single-step problems are the
-clearest case for leaving the flag off: one calculation each, correct either
-way, and roughly 30x the wait for an identical answer.
+Thinking mode did not improve accuracy here. It returned the same answers as
+plain mode, but with about 6x the average latency.
 
 | # | Problem | Kind | Correct | Plain | Thinking |
 | --- | --- | --- | ---: | ---: | ---: |
@@ -172,7 +165,7 @@ How many charges are paid in full?
 ```text
 A parent transaction of $250.00 was split into these children:
   100.00, 60.50, 39.50, 50.00
-By how many dollars do the children fail to sum to the parent?
+What is the difference between the parent amount and the total of the children?
 Answer the absolute difference, to 2 decimal places.
 ```
 
@@ -252,30 +245,6 @@ How many duplicate pairs are there?
 - **Plain**: `0.00`
 - **Thinking**: `0`
 
-## Why both modes succeeded on these
-
-Two different reasons, and the distinction matters.
-
-**The four single-step problems were never at risk.** One operation is the whole
-procedure, so a single pass is correct by construction. A unit price is one
-division, a percentage is one division, and counting duplicate pairs is one scan
-of the list. There is no intermediate value to lose.
-
-**The three multi-step problems are the interesting ones**, because they show
-the tag predicts risk rather than certainty:
-
-- `split-balanced` genuinely balances, so the plain model's habit of answering
-  `$0.00` happened to be right. Compare it with `split-discrepancy` in group 1,
-  where the same `$0.00` was wrong. The answer is identical; only the question
-  differs.
-- `fee-share` is tagged multi-step, but dividing an $8.84 fee among four
-  purchases is really one division. The tag was generous here.
-- `fifo-count` is the honest exception. It requires walking four charges and
-  carrying a balance, and the plain model handled it correctly.
-
-So a multi-step question is one where the flag **can** help, not one where a
-single pass always fails. That is why the comparison is worth running on your
-own task rather than assumed from the shape of the question.
 
 ---
 
