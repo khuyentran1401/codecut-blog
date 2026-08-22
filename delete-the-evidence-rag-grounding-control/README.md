@@ -1,101 +1,134 @@
-# Does Your RAG Grounding Checker Read the Document?
+# Small Hallucinations Slip Past Your Grounding Checker
 
-Companion code for the article *Your Grounding Score Might Be Counting Words*.
-
-## Experiment design
-
-### The question
-
-In RAG, the LLM should answer using the retrieved document, not unsupported
-facts. A grounding checker is supposed to verify that by comparing the answer
-with the document. This experiment tests how reliable that check is.
-
-### The conditions
-
-Every answer stays identical. Only the document changes:
-
-| Condition | Document passed to the checker | What it isolates |
-| --- | --- | --- |
-| `baseline` | The answer's own document | The number you would normally report |
-| `shuffled` | Another row's document | Whether the pairing matters, with length and format intact |
-| `deleted` | An empty document | How much score survives with no document at all |
-
-A checker that reads the document loses its skill when the document is wrong. One
-that has learned what a hallucination *sounds like* keeps it.
-
-### The metric
-
-AUROC per rule per condition, plus the **retained fraction**:
-
-```text
-(AUROC_condition - 0.5) / (AUROC_baseline - 0.5)
-```
-
-That is the share of above-chance skill that needs no document. Low is good.
-
-### The data
-
-200 balanced rows (100 hallucinated, 100 clean) from the QA subset of
-[`wandb/RAGTruth-processed`](https://huggingface.co/datasets/wandb/RAGTruth-processed)
-(MIT), sampled with seed 0. The shuffle is a derangement, so no row can keep its
-own document.
-
-### The variable under test
-
-The checker returns a suspicion score for every answer token, and a "span" is
-just a run of tokens scoring above 0.5. Collapsing that into one number per answer
-is a choice, so four rules run side by side:
-
-| Rule | How it scores an answer |
-| --- | --- |
-| `max_span` | Highest confidence among flagged spans, `0.0` when there are none |
-| `n_spans` | How many spans were flagged, ignoring confidence |
-| `max_token` | Highest single token score, whether or not it cleared 0.5 |
-| `mean_top5` | Mean of the five highest token scores |
-
-A `word_count` baseline is scored alongside them and never sees a document.
-
-## Findings
-
-| Rule | Own document | Shuffled | Retained |
-| --- | ---: | ---: | ---: |
-| `max_token` | 0.912 | 0.581 | 20% |
-| `max_span` | 0.844 | 0.581 | 23% |
-| `n_spans` | 0.816 | 0.673 | 55% |
-| `word_count` | 0.717 | never sees a document | n/a |
-
-Same model, same answers. `n_spans` keeps more than half its skill with no
-document at all, because span count tracks answer length. `max_token` is both the
-most accurate rule and the one that collapses properly when the evidence is wrong.
-
-So the shortcut was not in the checker. It was in how the checker's output got
-summarized. `FINDINGS.md` has the full grid, the operating points, and the scope
-limits that qualify all of it.
+Companion code for the article *Small Hallucinations Slip Past Your Grounding
+Checker*.
 
 ## How to run
 
 ```bash
 uv venv --python 3.11 .venv
-uv pip install --python .venv/bin/python datasets scikit-learn numpy lettucedetect
+uv pip install --python .venv/bin/python datasets lettucedetect
 ```
 
 Everything runs on CPU. No API key, no served model, no GPU.
 
 ```bash
-python run_experiment.py --stage sample   # build and record the sample, seconds
-python run_experiment.py --stage score    # 3 conditions x 4 rules, ~3 min
-python run_experiment.py --stage report   # AUROC, intervals, operating points
-python run_experiment.py --stage all      # all of the above
+python run_numbers.py --stage build      # construct the pairs, seconds
+python run_numbers.py --stage score      # ~2 min
+python run_numbers.py --stage report
+
+python run_negation.py --stage build
+python run_negation.py --stage score     # ~2 min
+python run_negation.py --stage report
+
+python run_sentences.py --stage score    # ~4 min, reuses the negation pairs
+python run_sentences.py --stage edited   # ~1 min
+python run_sentences.py --stage report
 ```
 
-Flags: `--n` (sample size, default 200), `--seed` (default 0).
+`run_sentences.py` reuses `results/negation_pairs.json`, so run `run_negation.py`
+first.
+
+`run_numbers.py` and `run_negation.py` take `--n` (sample size, default 100) and
+`--seed` (default 0) on the `build` stage. `run_sentences.py` takes only `--stage`.
+
+## Experiment design
+
+### The question
+
+A grounding checker compares a RAG answer against the retrieved document and
+reports how much of the answer the document fails to support. On RAGTruth's own
+hallucinations it does well. Those hallucinations are mostly sizeable invented
+passages, averaging about 134 characters of unsupported text.
+
+These experiments ask what happens when the unsupported claim is small.
+
+### The data
+
+The QA subset of the test split of
+[`wandb/RAGTruth-processed`](https://huggingface.co/datasets/wandb/RAGTruth-processed)
+(MIT), seed 0. Each experiment takes 100 answers annotators marked clean, so the
+starting point is always a grounded answer, and edits one thing.
+
+### The score
+
+`KRLabsOrg/lettucedect-base-modernbert-en-v1`, token output, one score per answer
+as the highest single token probability. Flagged means above `0.5`.
+
+Token output rather than spans: a span is a run of tokens already above `0.5`, so
+counting spans bakes in that threshold, and a small edit that lifts its tokens
+without crossing it vanishes from the count. On the number test a flagged span
+covered the changed number 34 times against 48 for the token score.
+
+### The edits
+
+| Script | Edit | Size |
+| --- | --- | --- |
+| `run_numbers.py` | one digit of a grounded number, new value absent from the source | ~2 chars |
+| `run_negation.py` | a negation inserted into a supported sentence | ~4 chars |
+
+Both edits are spliced at absolute offsets so the rest of the answer stays
+byte-identical. Rebuilding an answer from a sentence list also normalizes
+whitespace, and newlines turning into spaces is a second change the checker
+reacts to.
+
+## Findings
+
+### Detection tracks the size of the claim, not its severity
+
+| Unsupported claim | size | flagged |
+| --- | ---: | ---: |
+| invented passage (RAGTruth's own) | ~134 chars | 75 of 100 |
+| changed number | ~2 chars | 48 of 100 |
+| flipped negation | ~4 chars | 17 of 100 |
+| nothing changed | 0 | 13 of 100 |
+
+A flipped negation reverses the meaning of a claim completely and is caught
+barely above the rate at which untouched answers are flagged. The 75 comes from
+the article, which scores the corpus sample directly.
+
+### A smaller scoring window does not help
+
+Scoring each sentence separately, on the same 100 answers as the negation test:
+
+| Scored as | negation caught | clean answer flagged |
+| --- | ---: | ---: |
+| one whole answer | 17 of 100 | 13 of 100 |
+| worst of its sentences | 24 of 100 | 23 of 100 |
+| the edited sentence alone | 13 of 100 | 10 of 100 |
+
+Isolating the exact edited sentence, the most favorable case available, is worse
+than scoring the whole answer. Lowering the threshold does not help for negation
+either; every step down buys roughly as many false alarms as catches. The number
+case differs, and `FINDINGS.md` keeps the two sweeps apart.
+
+### The checker registers the flip and the output discards it
+
+How often the flipped copy outscored its own clean twin, where chance is 50:
+
+| Scored as | ranked higher |
+| --- | ---: |
+| one whole answer | 68 of 100 |
+| worst of its sentences | 36 of 100 |
+| the edited sentence alone | 78 of 100 |
+
+The signal is present and consistent. It is far too small to cross a threshold
+that also keeps clean answers quiet, and ranking against a known-correct twin is
+not something production has.
 
 ## Files
 
 | Path | What it holds |
 | --- | --- |
-| `run_experiment.py` | The whole experiment: sample, score, report |
-| `FINDINGS.md` | What the run showed, with corrections and scope limits |
-| `results/sample.json` | The exact cases, labels, and shuffled documents |
-| `results/scores.json` | Every rule, every condition, per answer |
-| `results/summary.md` | AUROC, bootstrap intervals, operating points, generated by `--stage report` |
+| `run_numbers.py` | Change one digit of a grounded number |
+| `run_negation.py` | Flip one negation in a supported sentence |
+| `run_sentences.py` | Whether a smaller scoring window helps, and the paired ranking |
+| `FINDINGS.md` | Run environment, what was ruled out, and scope limits |
+| `results/numbers_summary.md` | Wrong-number results, with per-pair examples |
+| `results/negation_summary.md` | Flipped-negation results, with per-pair examples |
+| `results/sentences_summary.md` | Scoring-window results, threshold sweep, paired ranking |
+
+Each summary is generated by its script's `--stage report`. The `build` and
+`score` stages also write JSON holding every pair and every raw score, which is
+where the summaries come from. Those files are a few hundred KB each and are not
+committed, since seed 0 makes them reproduce exactly.
