@@ -1,0 +1,23 @@
+**Check these in order:**
+
+1. **Data drift** — Compare distributions of key features between old and new training data. Look for shifted means, new categories, or missing values that weren't there before.
+
+2. **Label quality** — Spot-check 50–100 labels in the new data. A labeling error rate above 5% can tank performance.
+
+3. **Train/test leakage removed accidentally** — If you changed the split, confirm the test set is the same as before. Otherwise you're comparing apples to oranges.
+
+4. **Class balance shift** — Check `new_data['target'].value_counts()` vs the old data. A shifted prior can fool accuracy metrics even when the model is fine.
+
+5. **Preprocessing mismatch** — Verify scaling, encoding, and imputation were fit on the new training set (not the old one) and applied consistently to test.
+
+**Quick diagnostic to run now:**
+
+Evaluate the retrained model on the *old* test set and the *new* test set separately. This tells you:
+
+| Old test | New test | Likely cause |
+|----------|----------|-------------|
+| Dropped | Dropped | Bad training data or broken pipeline |
+| Stable | Dropped | Distribution shift in new data |
+| Dropped | Stable | Old patterns forgotten (catastrophic forgetting if fine-tuning) |
+
+**Next:** Run that split evaluation and share the two accuracy numbers — that narrows the root cause fast.

@@ -1,0 +1,28 @@
+Here's a systematic approach, ordered by likelihood and ease of checking:
+
+## 1. Data Volume Changes
+- Did input data grow significantly? Check row counts and file sizes for recent runs vs. a week ago.
+- A new upstream source or a backfill can silently 5x your data.
+
+## 2. Query Plans & Database
+- Run `EXPLAIN ANALYZE` on your heaviest queries. Look for sequential scans that used to be index scans.
+- Check if an index was dropped, a table was vacuumed/not vacuumed, or statistics are stale (`ANALYZE` the tables).
+- Look for lock contention — another process holding locks during your ETL window.
+
+## 3. Infrastructure / Resources
+- Check CPU, memory, disk I/O, and network on the ETL host and database server during the run.
+- Was the instance resized, a container memory limit reduced, or a new noisy neighbor deployed?
+- Disk full or swap thrashing will silently kill performance.
+
+## 4. Code Changes
+- `git log --since="1 week ago"` on the ETL repo. Even a small change (e.g., removing a `WHERE` clause, changing a batch size, adding a join) can cause this.
+- Check dependency updates — ORM or driver upgrades can change query behavior.
+
+## 5. Upstream API / External Services
+- If your ETL pulls from APIs, check response times. A slow upstream will bottleneck everything.
+- Rate limit changes or pagination behavior changes are common culprits.
+
+## 6. Job Logs
+- Compare a recent slow run's logs side-by-side with an old fast run. Look for which **stage** got slower — the answer usually narrows the search dramatically.
+
+**Start with #6** — once you know which stage blew up, the root cause from categories 1–5 usually becomes obvious. If you share the ETL stack or logs, I can help dig deeper.

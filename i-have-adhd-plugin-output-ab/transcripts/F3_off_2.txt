@@ -1,0 +1,116 @@
+## `.apply()` vs Vectorized Operations in Pandas
+
+### Vectorized operations
+
+Vectorized operations run in compiled C/NumPy under the hood, operating on entire arrays at once with no Python-level loop.
+
+```python
+# Vectorized — fast
+df["total"] = df["price"] * df["quantity"]
+df["upper"] = df["name"].str.upper()
+df["year"] = df["date"].dt.year
+df["capped"] = df["value"].clip(0, 100)
+df["bucket"] = np.where(df["score"] > 0.5, "high", "low")
+```
+
+These are **10–100x faster** than `.apply()` because they avoid per-row Python function calls and leverage SIMD instructions and cache-friendly memory layouts.
+
+### What `.apply()` actually does
+
+`.apply()` is a loop in disguise. It calls your Python function once per row (or column), with all the overhead of a Python function call each time. On a DataFrame with `axis=1`, each call receives a Series (one row), which itself is expensive to construct.
+
+```python
+# Slow — Python function called once per row
+df["result"] = df.apply(lambda row: row["a"] + row["b"], axis=1)
+
+# Fast equivalent
+df["result"] = df["a"] + df["b"]
+```
+
+### Performance hierarchy (fastest to slowest)
+
+| Approach | Relative speed | Notes |
+|---|---|---|
+| NumPy / pandas vectorized ops | **1x** (baseline) | `.str`, `.dt`, arithmetic, `np.where`, `pd.cut` |
+| `.map()` with a dict | ~2–5x slower | Hash lookup per element, but no function call |
+| List comprehension | ~5–10x slower | Faster than `.apply()` because no Series construction |
+| `.apply()` on a Series | ~10–50x slower | One Python call per element |
+| `.apply(axis=1)` on a DataFrame | ~50–200x slower | Constructs a Series object per row |
+
+### When `.apply()` is the right choice
+
+**1. Complex logic that genuinely can't be vectorized**
+
+When the computation depends on branching, external lookups, or stateful logic that has no vectorized equivalent:
+
+```python
+import re
+
+def parse_address(raw):
+    """Complex parsing with multiple regex, fallbacks, and validation."""
+    match = re.match(r"(\d+)\s+(.*),\s+(\w{2})\s+(\d{5})", raw)
+    if match:
+        return {"number": int(match.group(1)), "state": match.group(3)}
+    # fallback parsing, external geocoder call, etc.
+    return {"number": None, "state": None}
+
+df["parsed"] = df["raw_address"].apply(parse_address)
+```
+
+**2. Calling external APIs or I/O-bound operations per row**
+
+When each row triggers a network call, the Python overhead is negligible compared to I/O latency:
+
+```python
+df["sentiment"] = df["text"].apply(call_sentiment_api)
+```
+
+**3. Working with non-numeric, complex Python objects**
+
+Columns holding dicts, nested lists, or custom objects that pandas can't vectorize over:
+
+```python
+df["key_count"] = df["metadata"].apply(lambda d: len(d.keys()))
+```
+
+**4. Small DataFrames where readability wins**
+
+Under ~1,000 rows, the absolute time difference is negligible (microseconds vs milliseconds). Readable `.apply()` can be preferable to a convoluted chain of vectorized workarounds.
+
+**5. `GroupBy.apply()` for group-level transformations**
+
+When you need a custom aggregation that isn't covered by `.agg()`, `.transform()`, or built-in methods:
+
+```python
+def normalize_within_group(group):
+    return (group - group.mean()) / group.std()
+
+df["normalized"] = df.groupby("category")["value"].apply(normalize_within_group)
+```
+
+### Decision rule
+
+Ask yourself: **"Can I express this with arithmetic, `.str`, `.dt`, `np.where`, `np.select`, `pd.cut`, or `.map(dict)`?"**
+
+- **Yes** → use the vectorized version. Always.
+- **No** → try a list comprehension first (faster than `.apply()`). Use `.apply()` only when the function needs the row as a Series or the logic is genuinely complex enough to justify it.
+
+### Common traps
+
+- **`np.select` replaces multi-branch `.apply()`:**
+  ```python
+  # Instead of apply with if/elif/else
+  conditions = [df["x"] < 0, df["x"] == 0, df["x"] > 0]
+  choices = ["negative", "zero", "positive"]
+  df["label"] = np.select(conditions, choices)
+  ```
+
+- **`.map(dict)` replaces apply-as-lookup:**
+  ```python
+  # Instead of: df["code"].apply(lambda x: mapping[x])
+  df["label"] = df["code"].map(mapping)
+  ```
+
+- **`pd.cut` / `pd.qcut` replace binning logic in apply.**
+
+**Bottom line:** Reach for `.apply()` last, not first. Most uses of `.apply()` in the wild are unnecessary and can be replaced with something 10–100x faster.

@@ -1,0 +1,20 @@
+**Run this first** to find which stage ballooned:
+
+```bash
+# Check your ETL logs for step-by-step timing
+grep -E 'start|finish|duration|elapsed' /path/to/etl/logs/latest.log
+```
+
+Then investigate in this order:
+
+1. **Identify the slow stage** — Compare step timings from a good run (40 min) vs. a bad run (3 hr). One or two stages likely account for 90% of the increase.
+
+2. **Check data volume changes** — Did a source table grow unexpectedly? A new upstream dump? Run row counts on input tables vs. last week.
+
+3. **Check for missing indexes / table bloat** — A dropped or invalidated index turns a 2-second query into a 45-minute full scan. Look at `EXPLAIN ANALYZE` on the slowest queries.
+
+4. **Check for lock contention** — Another process (backup, concurrent write, long-running transaction) may be blocking your ETL. Check active locks/queries on your database.
+
+5. **Check infrastructure changes** — Disk full, memory pressure, smaller instance, network throttling, or a config change (parallelism reduced, batch size changed).
+
+**Next:** find your ETL logs and compare timestamps between a recent good run and last night's bad run. Paste the timings here and I can help pinpoint the cause.

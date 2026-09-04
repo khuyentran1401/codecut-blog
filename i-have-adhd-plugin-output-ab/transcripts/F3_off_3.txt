@@ -1,0 +1,117 @@
+## `.apply()` vs Vectorized Operations in Pandas
+
+### Vectorized operations
+
+Vectorized operations run in compiled C/NumPy under the hood, operating on entire arrays at once with no Python-level loop.
+
+```python
+# Vectorized — fast
+df["total"] = df["price"] * df["quantity"]
+df["name_upper"] = df["name"].str.upper()
+df["date"] = pd.to_datetime(df["raw_date"])
+df["clipped"] = df["value"].clip(0, 100)
+```
+
+**Why they're fast:** The iteration happens in C. No per-row Python interpreter overhead. NumPy/pandas also exploits CPU cache locality and SIMD instructions.
+
+**Typical speedup over `.apply()`:** 10x–100x for numeric ops, 3x–20x for string ops via `.str` accessors.
+
+### `.apply()`
+
+`.apply()` calls a Python function once per row (or column). Each call crosses the Python–C boundary and invokes the full interpreter overhead.
+
+```python
+# Slow — Python loop in disguise
+df["total"] = df.apply(lambda row: row["price"] * row["quantity"], axis=1)
+```
+
+### When vectorized wins (most of the time)
+
+| Task | Vectorized | `.apply()` equivalent |
+|---|---|---|
+| Arithmetic | `df["a"] + df["b"]` | `df.apply(lambda r: r["a"] + r["b"], axis=1)` |
+| Conditionals | `np.where(df["x"] > 0, df["x"], 0)` | `df["x"].apply(lambda v: v if v > 0 else 0)` |
+| String ops | `df["s"].str.contains("foo")` | `df["s"].apply(lambda s: "foo" in s)` |
+| Multiple conditions | `np.select([cond1, cond2], [val1, val2], default)` | `df.apply(complex_if_else, axis=1)` |
+
+**Rule of thumb:** If you can express it with built-in pandas/numpy operations, do that.
+
+### When `.apply()` is actually the right choice
+
+**1. Complex row-wise logic that can't be decomposed**
+
+When the computation involves branching, lookups, or stateful logic that genuinely can't be expressed as a combination of vectorized ops:
+
+```python
+def classify(row):
+    if row["age"] < 18:
+        return lookup_minor_category(row["region"])  # external lookup
+    elif row["score"] > threshold and row["verified"]:
+        return expensive_validation(row["id"])        # API call / IO
+    else:
+        return fallback(row)
+
+df["category"] = df.apply(classify, axis=1)
+```
+
+**2. Calling non-vectorized external code**
+
+If you must call a library function that only accepts scalars (e.g., a geocoding API, a custom C extension, a regex-heavy parser with conditional logic):
+
+```python
+df["parsed"] = df["raw_address"].apply(geocoder.parse)
+```
+
+**3. GroupBy with custom aggregations**
+
+When `groupby().agg()` doesn't support your aggregation, `.apply()` on the group is the intended pattern:
+
+```python
+def weighted_avg(group):
+    return np.average(group["value"], weights=group["weight"])
+
+result = df.groupby("category").apply(weighted_avg)
+```
+
+**4. Small DataFrames where performance doesn't matter**
+
+With <1,000 rows, the overhead difference is negligible. Readability wins. If `.apply()` makes the intent clearer and the data is small, use it.
+
+**5. Prototyping**
+
+Write it with `.apply()` first to get correct results, then optimize to vectorized if profiling shows it matters.
+
+### Decision checklist
+
+```
+Is it arithmetic, comparison, or string op?
+  → Use vectorized (df["a"] + df["b"], .str.upper(), np.where)
+
+Is it a conditional mapping?
+  → Use np.select, np.where, or .map(dict)
+
+Does it require row-wise logic with multiple columns?
+  → Try to decompose into vectorized steps first
+  → If you truly can't, .apply(axis=1) is fine
+
+Is it a groupby custom aggregation?
+  → .apply() on the group is the standard pattern
+
+Is the DataFrame small (<1k rows)?
+  → Use whatever is clearest
+```
+
+### One common trap
+
+`.apply()` with `axis=1` is the slowest variant because it constructs a `Series` object for every single row. If you must use `.apply()` row-wise on a large DataFrame, consider `df.itertuples()` (3–5x faster than `.apply(axis=1)`) or converting to NumPy arrays and looping there.
+
+```python
+# Faster than .apply(axis=1) when you need a Python loop
+prices = df["price"].values
+quantities = df["quantity"].values
+totals = [p * q for p, q in zip(prices, quantities)]
+```
+
+But this is still slower than `df["price"] * df["quantity"]`.
+
+**Bottom line:** Default to vectorized. Reach for `.apply()` only when the per-element logic genuinely requires Python—external calls, complex branching that resists decomposition, or small data where clarity matters more than speed.

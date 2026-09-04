@@ -1,0 +1,76 @@
+## Vectorized ops vs `.apply()` — when to use which
+
+**Vectorized operations** run in compiled C/NumPy under the hood. `.apply()` loops row-by-row in Python. That's the core difference.
+
+### Speed gap
+
+| Operation | Vectorized | `.apply()` |
+|---|---|---|
+| Multiply column by 2 | `df['x'] * 2` (~1ms on 1M rows) | `df['x'].apply(lambda x: x*2)` (~300ms) |
+| Typical speedup | **50–500x faster** | baseline |
+
+The gap grows with row count. On 1K rows you won't notice. On 1M+ rows it's the difference between interactive and "go get coffee."
+
+### Why vectorized is default-better
+
+- **Speed**: operations dispatch to C/NumPy/Arrow, no Python interpreter per row
+- **Memory**: intermediate arrays are contiguous; `.apply()` creates Python objects per cell
+- **Readability**: `df['a'] + df['b']` is clearer than a lambda doing the same thing
+
+Pandas has vectorized versions of most things people reach for `.apply()` to do:
+
+```python
+# String ops — use .str accessor, not apply
+df['name'].str.lower()            # not .apply(str.lower)
+df['name'].str.contains('foo')    # not .apply(lambda x: 'foo' in x)
+
+# Conditionals — use np.where or .where, not apply
+np.where(df['x'] > 0, 'pos', 'neg')
+
+# Multiple columns — use direct column math
+df['total'] = df['price'] * df['qty']
+
+# Binning
+pd.cut(df['age'], bins=[0, 18, 65, 120])
+```
+
+### When `.apply()` is actually the right call
+
+1. **Complex row logic with branching** — when the per-row logic has multiple `if/elif` branches, exception handling, or calls to non-vectorizable functions. Forcing this into `np.select` with 8 conditions is worse than a clear `.apply()`.
+
+2. **Calling external APIs or libraries per row** — geocoding, NLP model inference, regex with a compiled pattern that has no `.str` equivalent. The Python call is the bottleneck anyway, so the `.apply()` overhead is noise.
+
+3. **GroupBy + custom aggregation** — `df.groupby('g').apply(custom_func)` when the aggregation doesn't decompose into built-in aggs like `.sum()`, `.mean()`, `.transform()`.
+
+4. **Small DataFrames (< ~10K rows)** — the absolute time difference is negligible. Clarity wins over micro-optimization.
+
+5. **Returning complex structures** — when each row needs to produce a dict, list, or Series that expands into multiple columns, and there's no vectorized equivalent.
+
+### Decision checklist
+
+```
+Can I do it with column arithmetic or a built-in method?
+  → Yes → use that (vectorized)
+  → No ↓
+
+Is the DataFrame under ~10K rows?
+  → Yes → .apply() is fine, optimize later if needed
+  → No ↓
+
+Can I rewrite it with np.where / np.select / pd.cut?
+  → Yes → do that
+  → No ↓
+
+Is the per-row work inherently slow (API call, model inference)?
+  → Yes → .apply() is fine, the loop isn't the bottleneck
+  → No ↓
+
+Use .apply(), but profile it. If it's a hotspot, consider
+Cython, numba, or restructuring the logic.
+```
+
+### One common trap
+
+`.apply()` with `axis=1` (row-wise on a DataFrame) is the slowest variant — it creates a Series per row. If you're doing `df.apply(func, axis=1)` on a large frame, that's the first thing to optimize away.
+
+**Next**: if you have a specific `.apply()` you're wondering about, paste it and I'll show the vectorized alternative (or confirm `.apply()` is the right call).

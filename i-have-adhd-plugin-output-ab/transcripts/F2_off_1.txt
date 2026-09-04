@@ -1,0 +1,34 @@
+Here's a systematic approach, ordered by likelihood and ease of checking:
+
+**1. Data volume changes**
+- Did input data grow significantly? Check row counts/file sizes for recent runs vs. a month ago.
+- New upstream sources or schema changes feeding more data than expected.
+
+**2. Database/query performance**
+- Check for missing indexes, especially if new columns or tables were added recently.
+- Look for full table scans — run `EXPLAIN` on your heaviest queries.
+- Check if table statistics are stale (`ANALYZE` / `VACUUM` if Postgres, `OPTIMIZE TABLE` if MySQL).
+- Lock contention — are other jobs or users holding locks during the ETL window?
+
+**3. Infrastructure changes**
+- Resource constraints: disk I/O, memory pressure, CPU. Check monitoring dashboards for the ETL window.
+- Was the database or compute instance resized, moved, or sharing more load?
+- Network latency if reading from remote sources.
+
+**4. Code/config changes**
+- `git log` the ETL repo — what changed around the time it slowed down? Even "minor" changes can introduce N+1 queries or disable batching.
+- Check if parallelism/batch sizes were altered.
+
+**5. Quick diagnostics to run now**
+```bash
+# Compare recent run logs side-by-side
+diff <(grep -E 'START|END|duration' etl-log-fast.log) \
+     <(grep -E 'START|END|duration' etl-log-slow.log)
+
+# Find which step ballooned
+# Most ETL frameworks log per-step timing — look for the step that went from minutes to hours
+```
+
+**The single highest-value first step:** compare per-step timing between a fast run and a slow run. This immediately tells you whether one step is the bottleneck or everything got slower uniformly — and that distinction points you in completely different directions.
+
+Want help investigating any of these areas in your actual codebase?

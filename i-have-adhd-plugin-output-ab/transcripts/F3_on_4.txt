@@ -1,0 +1,86 @@
+## Vectorized ops vs `.apply()` in pandas
+
+### Vectorized operations
+
+Pandas and NumPy execute these in compiled C/Cython loops over contiguous memory. No Python interpreter overhead per element.
+
+```python
+# Fast — runs in C
+df["total"] = df["price"] * df["quantity"]
+df["upper"] = df["name"].str.upper()
+df["year"] = df["date"].dt.year
+```
+
+**Why they're fast:** One Python-to-C call processes the entire array. CPU cache stays hot because data is contiguous. NumPy/pandas handles type dispatch once, not per row.
+
+**Rough speedup:** 10x–100x over `.apply()` for numeric ops; 3x–20x for string accessors (`.str.*`).
+
+### `.apply()` — what actually happens
+
+```python
+df["total"] = df.apply(lambda row: row["price"] * row["quantity"], axis=1)
+```
+
+For each row, pandas:
+1. Creates a new `Series` object (memory allocation + dict-like index)
+2. Calls your Python function through the interpreter
+3. Boxes the result back into the output array
+
+That per-row `Series` creation is the real killer — not just the Python function call.
+
+### When `.apply()` is the right choice
+
+| Situation | Why `.apply()` wins | Example |
+|---|---|---|
+| **Complex branching logic** that can't be expressed as `np.where` / `np.select` chains | Readability matters more than speed | Multi-step validation with early returns |
+| **Calling external APIs or I/O** per row | The I/O latency dwarfs any loop overhead | Geocoding each address |
+| **Grouped transforms** with `groupby().apply()` | Each group is a full DataFrame; the function runs once per group (few calls) | Custom resampling per sensor ID |
+| **Non-numeric custom objects** | No vectorized path exists | Parsing a column of nested JSON strings into domain objects |
+| **Small DataFrames (< ~1k rows)** | Overhead is negligible; write what's clearest | Config tables, lookup tables |
+
+### Decision framework
+
+```
+Can you write it with arithmetic / .str.* / .dt.* / np.where / np.select?
+  → YES: use that. Done.
+  → NO:
+      Is the DataFrame under ~1,000 rows?
+        → YES: .apply() is fine. Optimize only if profiling says so.
+        → NO:
+            Can you restructure as a grouped operation (few groups)?
+              → YES: groupby().apply() — acceptable.
+              → NO:
+                  Consider list comprehension (avoids Series creation per row):
+                    df["out"] = [my_func(p, q) for p, q in zip(df["price"], df["quantity"])]
+                  This is 2x–5x faster than .apply(axis=1) because it skips
+                  the per-row Series construction.
+```
+
+### The list-comprehension middle ground
+
+When vectorization isn't possible but you need speed over `.apply()`:
+
+```python
+# .apply() — slow (creates a Series per row)
+df["label"] = df.apply(lambda r: classify(r["a"], r["b"], r["c"]), axis=1)
+
+# list comp + zip — same result, 2–5x faster
+df["label"] = [classify(a, b, c) for a, b, c in zip(df["a"], df["b"], df["c"])]
+```
+
+### One gotcha: `.apply()` on a single column
+
+```python
+# This is fine — no axis=1, no per-row Series creation
+df["price_bin"] = df["price"].apply(my_bucket_func)
+```
+
+Column-wise `.apply()` (no `axis=1`) is faster than row-wise because it iterates over scalar values, not `Series` objects. Still slower than vectorized, but the gap shrinks.
+
+### Summary
+
+- **Default to vectorized.** It's not just faster — it's usually shorter code too.
+- **`.apply(axis=1)` is almost never the answer** for large DataFrames. A list comprehension with `zip` is a better fallback.
+- **`.apply()` is fine** for small data, grouped transforms (few groups), I/O-bound work, or genuinely complex per-row logic where clarity matters.
+
+**Next:** if you have a specific `.apply()` call you're wondering about, paste it and I'll show the vectorized equivalent.

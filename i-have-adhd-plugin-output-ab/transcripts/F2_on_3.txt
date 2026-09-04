@@ -1,0 +1,24 @@
+**Check what changed recently** — deploy logs, schema changes, new data sources, or config updates around when the slowdown started.
+
+## Diagnostic checklist (do now)
+
+1. **Data volume** — compare row counts / file sizes for today vs. a week ago. A upstream table explosion is the #1 cause.
+2. **Query plans** — run `EXPLAIN ANALYZE` on the slowest queries. Look for sequential scans that used to be index scans (missing index, stats drift, or schema change).
+3. **Resource contention** — check CPU, memory, I/O, and connection pool usage on the DB/warehouse during the job window. Another job or user may be competing.
+4. **Parallelism / concurrency** — did worker count, thread pool, or partition config change? A single-threaded fallback turns 40 min into hours.
+5. **Network / external calls** — any API calls, S3 reads, or cross-region transfers that added latency? Check timeouts and retries.
+
+## Quick wins to narrow it down
+
+```bash
+# If your ETL logs stage-level timing:
+grep -E 'stage|step|duration|elapsed' /path/to/etl.log | tail -30
+
+# Compare data volume:
+wc -l /path/to/input/today/* 
+wc -l /path/to/input/last_week/*
+```
+
+The stage where runtime jumped from minutes to hours tells you whether it's a data problem, a query problem, or an infra problem.
+
+**Next step:** find which stage/task accounts for the extra 2+ hours — that narrows the root cause immediately.

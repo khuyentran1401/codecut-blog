@@ -1,0 +1,25 @@
+Here are the key areas to investigate, roughly in order of likelihood:
+
+**Data quality issues**
+- **Distribution shift** — compare feature distributions between old and new data. New data may come from a different population or time period.
+- **Label quality** — check for mislabeled examples, changed labeling criteria, or inconsistent annotation in the new data.
+- **Data leakage removed** — if the old model had accidental leakage that inflated metrics, retraining on clean data would look like a "drop."
+
+**Preprocessing & pipeline changes**
+- **Feature engineering drift** — verify the same transformations are applied identically. Even small changes (different scaling, new missing-value handling) can hurt.
+- **Train/test split differences** — ensure you're evaluating on the same test set (or a comparable one). A harder test set looks like a model regression.
+
+**Training configuration**
+- **Hyperparameters** — were they tuned on the old data? They may not transfer. Re-run tuning on the new data.
+- **Class imbalance shift** — if class proportions changed, your model may be optimizing for a different distribution.
+- **Random seed / initialization** — run multiple seeds to rule out variance.
+
+**Quick diagnostic steps**
+1. Evaluate the **new model on the old test set** — if it's fine there, the issue is data shift, not the model.
+2. Evaluate the **old model on the new test set** — if it also drops, the new data is genuinely harder or different.
+3. Look at a **confusion matrix** on the new data to see which classes/segments degraded.
+4. Inspect the **worst predictions** on the new data for patterns (certain subgroups, edge cases, corrupted features).
+
+If both models perform poorly on the new test set, the problem is data distribution shift and you likely need to retrain with a blend of old + new data or adapt your features. If only the new model is worse, look at training config and preprocessing first.
+
+Want me to help debug this with your actual code or data?

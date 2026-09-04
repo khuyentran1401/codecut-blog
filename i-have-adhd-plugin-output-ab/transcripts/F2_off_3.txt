@@ -1,0 +1,46 @@
+Here's a systematic approach, ordered by most common culprits:
+
+## 1. Data Volume Changes
+- Check if input data size spiked (new source, backfill, duplicate records)
+- Compare row counts / file sizes between a normal run and the slow one
+
+## 2. Database / Query Performance
+- Look for missing indexes, especially if schema changed recently
+- Check for table lock contention — another process holding locks during the ETL window
+- Review query execution plans for the slowest steps (`EXPLAIN ANALYZE`)
+- Look for full table scans that used to be index scans (statistics stale?)
+
+## 3. Resource Contention
+- CPU, memory, disk I/O on the ETL host — was something else scheduled at the same time?
+- Database connection pool exhaustion
+- Network latency if reading from remote sources
+
+## 4. Code / Config Changes
+- `git log` the ETL repo — any recent commits that changed queries, batch sizes, or parallelism?
+- Check if a dependency was upgraded (ORM, driver, framework)
+- Look for accidentally disabled parallelism or reduced batch sizes
+
+## 5. Infrastructure Changes
+- Database failover to a smaller replica?
+- Cloud instance type changed?
+- Storage tier downgraded?
+
+## Where to start concretely
+
+```bash
+# 1. Check your ETL logs for which step is slow
+#    Most ETL frameworks log step durations — find the bottleneck first
+
+# 2. Compare data volumes
+#    "Did we go from 1M to 50M rows?"
+
+# 3. Check recent changes
+git log --since="1 week ago" --oneline
+
+# 4. Check resource usage during the run
+#    top, htop, iostat, or your monitoring dashboard (Grafana, CloudWatch, etc.)
+```
+
+The single highest-value action: **find which step in the pipeline got slower**. Going from 40min to 3hr is a ~4.5x slowdown — that's usually one or two steps, not everything uniformly slower. Once you isolate the step, the root cause is usually obvious.
+
+Want help digging into a specific layer (database queries, Spark jobs, Airflow DAGs, etc.)?

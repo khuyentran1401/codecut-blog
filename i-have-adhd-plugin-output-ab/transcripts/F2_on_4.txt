@@ -1,0 +1,33 @@
+**Run this first** to find what changed recently:
+
+```bash
+# Check git log for ETL-related changes around when slowdown started
+git log --since="1 week ago" --oneline -- '**/etl*' '**/pipeline*' '**/transform*'
+```
+
+## 5 most likely causes, ranked
+
+1. **Data volume spike** — Check row counts for source tables. A 4.5x slowdown often maps to a data explosion (new partner feed, duplicated imports, missing dedup).
+
+2. **Missing or dropped index** — A schema migration may have dropped an index. Run `EXPLAIN ANALYZE` on the slowest query. Look for sequential scans on large tables.
+
+3. **New upstream schema / join explosion** — A changed join key or added NULL values can silently turn an inner join into a cartesian product. Check row counts before and after each transform step.
+
+4. **Resource contention** — Another job now overlaps the ETL window. Check if a new cron job, backup, or vacuum is competing for CPU/IO at the same time.
+
+5. **Code change in transform logic** — A recent commit added an N+1 query, removed a batch operation, or switched from bulk insert to row-by-row.
+
+## Quickest diagnostic
+
+Add timing around each ETL phase (extract, transform, load) if you don't already have it. The phase that grew from minutes to hours tells you exactly where to dig.
+
+```python
+# Minimal example
+import time
+for phase in [extract, transform, load]:
+    start = time.time()
+    phase()
+    print(f"{phase.__name__}: {time.time() - start:.1f}s")
+```
+
+**Next step:** Check whether this is a data problem or a code problem — compare today's source row counts against last week's. If counts are similar, focus on indexes and recent code changes.

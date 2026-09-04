@@ -1,0 +1,31 @@
+**Check what changed recently** — deploy logs, config changes, new data volume.
+
+## Top 5 places to look, in order
+
+1. **Data volume spike** — compare row counts / file sizes for today vs. last week. A 4x slowdown often means 4x more data.
+2. **Missing or dropped indexes** — run `EXPLAIN ANALYZE` on the slowest queries. A full table scan where there used to be an index seek is the most common silent killer.
+3. **Upstream schema or API change** — if you pull from an external source, check if response pagination broke, a field type changed, or rate limits tightened.
+4. **Resource contention** — check if another job now overlaps the ETL window. Look at CPU, memory, I/O wait, and connection pool usage during the run.
+5. **Code/config deploy** — diff the last working version against current. Even a logging level change (DEBUG vs INFO) can 10x runtime on high-volume loops.
+
+## Quick diagnostic commands
+
+```bash
+# If it's a database bottleneck — find the slow queries
+# Postgres example:
+SELECT pid, now() - pg_stat_activity.query_start AS duration, query
+FROM pg_stat_activity
+WHERE state != 'idle'
+ORDER BY duration DESC
+LIMIT 10;
+
+# If it's a compute bottleneck — check resource usage during the job
+top -b -n 1 | head -20
+iostat -x 1 3
+```
+
+## Narrowing it down fast
+
+If your ETL has distinct stages (extract → transform → load), **add timestamps between stages** to isolate which phase blew up. A 3-hour runtime usually means one stage is responsible for 2+ hours of it.
+
+**Next step:** check your data volume for the last 7 days and compare against the previous week. That's the single fastest way to rule in or out the most common cause.

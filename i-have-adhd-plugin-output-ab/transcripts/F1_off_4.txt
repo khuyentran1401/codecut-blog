@@ -1,0 +1,27 @@
+Here are the key areas to investigate, roughly in order of likelihood:
+
+## Data Issues
+- **Data quality** — Check for label noise, missing values, duplicates, or corrupted records in the new data.
+- **Distribution shift** — Compare feature distributions between old and new data. A shift means the model may be learning different patterns.
+- **Class imbalance** — Did the label distribution change? A skewed dataset can tank metrics on minority classes.
+- **Data leakage removed** — Sometimes the old model was accidentally benefiting from leakage that the new data doesn't have.
+
+## Training Pipeline
+- **Train/test split** — Are you evaluating on the same test set? If the test set changed, the drop may reflect a harder evaluation, not a worse model.
+- **Preprocessing changes** — Any difference in feature engineering, scaling, encoding, or imputation between old and new pipelines.
+- **Hyperparameters** — Were they tuned on the old data? They may not transfer well. Re-run tuning on the combined or new dataset.
+- **Random seed / non-determinism** — Run training multiple times to see if the drop is within normal variance.
+
+## Model-Specific
+- **Catastrophic forgetting** — If you fine-tuned only on new data (not old + new), the model may have "forgotten" old patterns. Retrain on the combined dataset.
+- **Underfitting** — If the new data is larger or more complex, the model capacity may be insufficient. Check training loss — if it's also high, the model isn't fitting well.
+- **Overfitting on old data** — The original accuracy may have been inflated by overfitting. The new data is exposing the true generalization gap.
+
+## Quick Diagnostic Steps
+
+1. **Evaluate the old model on the new test data** — if it also drops, the data shifted.
+2. **Train the new model on the old data** — if accuracy recovers, the new data is the problem.
+3. **Train on old + new combined** — often the simplest fix.
+4. **Look at per-class / per-segment metrics** — find *where* the accuracy dropped, not just that it dropped.
+
+The most common culprit is either distribution shift in the new data or evaluating on a different test set. Start there.

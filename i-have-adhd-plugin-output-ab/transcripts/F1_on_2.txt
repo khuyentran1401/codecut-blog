@@ -1,0 +1,15 @@
+**Check these five things, in order:**
+
+1. **Data drift** — Compare distributions of key features between old and new training data. Look for shifted means, new categories, or missing values that weren't there before.
+
+2. **Label quality** — Spot-check 50–100 labels in the new data. Mislabeled or inconsistently labeled examples are the most common silent killer.
+
+3. **Train/test leakage change** — If your old model had data leakage that inflated metrics, the "drop" may actually be your model getting more honest. Verify your old eval was clean.
+
+4. **Class imbalance shift** — Check if the class distribution changed between old and new data. A 60/40 split becoming 90/10 will tank minority-class performance.
+
+5. **Hyperparameters/preprocessing mismatch** — Confirm the same preprocessing pipeline and hyperparameters were used. Retrained models sometimes silently pick up different scaling, encoding, or default params.
+
+**Fastest diagnostic:** Run your retrained model on the *old* test set. If it scores well there but poorly on new data, the problem is data drift or label quality. If it scores poorly on both, the problem is in your training pipeline.
+
+**Next step:** Run `old_test_score = model.evaluate(old_test_X, old_test_y)` and compare against your baseline.

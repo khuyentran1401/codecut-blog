@@ -1,0 +1,88 @@
+## `.apply()` vs Vectorized Operations in pandas
+
+### Vectorized operations
+
+Vectorized operations run in compiled C/NumPy under the hood. They operate on entire arrays at once with no Python-level loop.
+
+```python
+# Vectorized — fast
+df["total"] = df["price"] * df["quantity"]
+df["upper"] = df["name"].str.upper()
+df["date"] = pd.to_datetime(df["raw_date"])
+df["flag"] = np.where(df["score"] > 90, "high", "low")
+```
+
+**Why they're fast:** The iteration happens in C, memory is contiguous, and CPU SIMD instructions can kick in. Typical speedup over `.apply()` is **10–100x**, sometimes more.
+
+### `.apply()`
+
+`.apply()` calls a Python function once per row (or column). Each call has Python interpreter overhead: function dispatch, type checking, boxing/unboxing scalars.
+
+```python
+# .apply() — slow Python loop in disguise
+df["result"] = df.apply(lambda row: row["a"] + row["b"], axis=1)
+```
+
+This is functionally equivalent to a `for` loop. The only thing `.apply()` adds over an explicit loop is automatic index alignment and result concatenation.
+
+### Performance comparison (rough order of magnitude)
+
+| Approach | Relative speed |
+|---|---|
+| NumPy / pandas vectorized | **1x** (baseline) |
+| `.apply()` with a simple function | 10–100x slower |
+| `.apply(axis=1)` (row-wise) | 50–200x slower |
+| Python `for` loop | ~same as `.apply()` |
+
+### When `.apply()` is actually the right choice
+
+**1. Complex logic that can't be expressed as vectorized ops**
+
+```python
+# Genuinely complex per-row logic with branches, external lookups, etc.
+def classify(row):
+    if row["type"] == "A" and row["value"] > threshold_map[row["region"]]:
+        return expensive_lookup(row["id"])
+    elif row["type"] == "B":
+        return parse_custom_format(row["payload"])
+    return "default"
+
+df["class"] = df.apply(classify, axis=1)
+```
+
+If rewriting this as chained `np.where` / `np.select` would be unreadable or impossible (e.g., it calls external APIs, uses dicts with complex keys, or has deep nesting), `.apply()` is fine.
+
+**2. GroupBy with custom aggregations**
+
+```python
+# Custom aggregation that pandas doesn't provide built-in
+df.groupby("category")["values"].apply(lambda s: s.nlargest(3).mean())
+```
+
+GroupBy `.apply()` passes each group as a Series/DataFrame, which is often the only clean way to express multi-step group-level logic.
+
+**3. Small DataFrames where it doesn't matter**
+
+If your DataFrame has hundreds or a few thousand rows, the absolute time difference is negligible (milliseconds). Readability wins.
+
+**4. Working with non-numeric / irregular data**
+
+Parsing nested JSON, regex with conditional logic, or interacting with objects that don't have vectorized equivalents.
+
+### When `.apply()` is the wrong choice
+
+- **Arithmetic or comparisons:** `df["a"] + df["b"]`, `df["x"] > 5` — always vectorize.
+- **String operations:** `df["col"].str.contains(...)`, `.str.replace(...)` — use the `.str` accessor.
+- **Conditional assignment:** Use `np.where()`, `np.select()`, or `pd.cut()`.
+- **Type conversions:** `pd.to_datetime()`, `.astype()`.
+- **Anything expressible with `map()`:** `df["col"].map(some_dict)` is vectorized and replaces `apply(lambda x: some_dict[x])`.
+
+### Decision rule
+
+> **Can you express it with built-in pandas/NumPy operations?**
+> - **Yes** → Use them. Always faster, usually clearer.
+> - **No** → Is the DataFrame large (>100k rows) and performance matters?
+>   - **Yes** → Try harder to vectorize (`np.select`, `.str` accessor, `merge` instead of lookup). If truly impossible, consider `numba` or `itertuples()` (faster than `.apply()`).
+>   - **No** → `.apply()` is fine. Optimize for readability.
+
+The short version: **`.apply()` is a convenience, not a performance tool.** Reach for it when the logic is genuinely complex and the data is small enough that you won't notice, or when no vectorized alternative exists.

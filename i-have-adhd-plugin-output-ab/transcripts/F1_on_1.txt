@@ -1,0 +1,13 @@
+Check these in order:
+
+1. **Data drift** — Compare distributions of key features between old and new data. Plot histograms or run a KS test. If the new data looks different, that's your likely cause.
+
+2. **Label quality** — Spot-check labels in the new data for errors, inconsistencies, or a shifted class distribution. Even a small % of mislabeled examples can tank accuracy.
+
+3. **Train/test leakage lost** — If the old model accidentally had leakage that inflated metrics, retraining on clean data will look like a drop. Verify your old eval was legit.
+
+4. **Class imbalance shift** — Compare class ratios old vs new. A shift from 50/50 to 90/10 changes what "accuracy" means. Check per-class precision/recall, not just overall accuracy.
+
+5. **Hyperparameters/preprocessing mismatch** — Confirm the same feature engineering, scaling, and hyperparameters were used. A missing normalization step or changed default can silently break things.
+
+**Next:** Run `old_data.describe()` vs `new_data.describe()` side by side and check for columns with large mean/std shifts. That's the fastest way to spot data drift.

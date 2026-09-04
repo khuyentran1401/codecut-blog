@@ -1,0 +1,15 @@
+**Check what changed recently** — deploy diffs, new data volumes, or infra changes in the last few days.
+
+## Top 5 places to look, in order
+
+1. **Data volume spike** — compare row counts / file sizes for today vs. a week ago. A 4–5x data growth explains a 4–5x slowdown directly.
+2. **Missing or dropped indexes** — run `EXPLAIN ANALYZE` on the slowest query. A full table scan where there used to be an index seek is the most common silent killer.
+3. **Upstream schema or API change** — if the extract phase pulls from an external source, check if response times or pagination changed. Add timing logs per phase (extract / transform / load) to isolate which leg blew up.
+4. **Resource contention** — another job or query competing for CPU/memory/IO at the same time window. Check `pg_stat_activity`, cloud monitoring, or container metrics during the run.
+5. **Code change** — `git log --since="3 days ago" -- etl/` (adjust path). Look for new joins, removed `WHERE` clauses, or a loop that replaced a bulk operation.
+
+## Quick diagnostic
+
+Add wall-clock timestamps between each major ETL step if you don't already have them. That alone tells you whether the bottleneck is extract, transform, or load — cuts your search space by ~2/3.
+
+**Next step:** check the data volume for the most recent run vs. last week's. That takes under 2 minutes and rules out (or confirms) the most common cause.

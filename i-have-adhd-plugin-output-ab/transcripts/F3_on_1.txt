@@ -1,0 +1,65 @@
+## Vectorized ops vs `.apply()` — when to use which
+
+**Vectorized operations** run in compiled C/NumPy under the hood. **`.apply()`** loops row-by-row (or column-by-column) in Python. The performance gap is typically **10×–100×**.
+
+### Vectorized — use by default
+
+```python
+# Fast: compiled C loop
+df["total"] = df["price"] * df["quantity"]
+df["upper"] = df["name"].str.upper()
+df["clipped"] = df["value"].clip(0, 100)
+df["filled"] = df["col"].fillna(0)
+```
+
+Pandas, NumPy, and `.str` / `.dt` accessors cover most transforms: arithmetic, comparisons, string methods, datetime extraction, `np.where`, `np.select`, `.clip()`, `.replace()`, `.map()` with a dict.
+
+### `.apply()` — use when these conditions are **all** true
+
+1. **No vectorized equivalent exists** for your logic
+2. **The logic per row is complex** — branching, external lookups, multiple columns interacting in non-trivial ways
+3. **The DataFrame is small enough** that the speed hit doesn't matter, OR you've profiled and `.apply()` isn't the bottleneck
+
+### Concrete cases where `.apply()` is the right call
+
+| Situation | Why `.apply()` wins |
+|---|---|
+| Calling an **external API or library** per row (geocoder, regex engine, custom parser) | No vectorized path exists |
+| **Complex branching** across 3+ columns that `np.select` would make unreadable | Readability matters more than speed |
+| **Aggregation inside `groupby`** with a custom function that `.agg()` built-ins can't express | `groupby.apply(func)` is the designed API |
+| **Returning multiple new columns** from one pass over each row | `df.apply(func, axis=1, result_type="expand")` is cleaner than 5 separate vectorized calls |
+| **Prototyping** — you need it working in 2 minutes, DataFrame has <10k rows | Speed is irrelevant; clarity wins |
+
+### Common traps — looks like you need `.apply()`, but you don't
+
+```python
+# BAD: .apply() for simple conditional
+df["label"] = df["score"].apply(lambda x: "high" if x > 80 else "low")
+
+# GOOD: 10-50× faster
+df["label"] = np.where(df["score"] > 80, "high", "low")
+```
+
+```python
+# BAD: .apply() for multi-condition
+df["tier"] = df.apply(lambda r: "gold" if r["spend"] > 1000 else "silver" if r["spend"] > 500 else "bronze", axis=1)
+
+# GOOD: np.select
+conditions = [df["spend"] > 1000, df["spend"] > 500]
+choices = ["gold", "silver"]
+df["tier"] = np.select(conditions, choices, default="bronze")
+```
+
+```python
+# BAD: .apply() to parse dates
+df["parsed"] = df["date_str"].apply(pd.to_datetime)
+
+# GOOD: vectorized
+df["parsed"] = pd.to_datetime(df["date_str"])
+```
+
+### Decision rule (one sentence)
+
+If you can express it with **arithmetic, `np.where`/`np.select`, or a `.str`/`.dt` accessor** — do that. Otherwise `.apply()` is fine; just don't use it on >100k rows without profiling first.
+
+**Next:** if you have a specific `.apply()` call you're unsure about, paste it and I'll show the vectorized alternative (or confirm `.apply()` is the right choice).

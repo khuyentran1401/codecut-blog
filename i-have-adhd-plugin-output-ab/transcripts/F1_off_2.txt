@@ -1,0 +1,24 @@
+Here are the key areas to investigate, roughly in order of likelihood:
+
+**Data issues (check first)**
+- **Data drift** — compare distributions of features and labels between old and new data. Shifted distributions are the most common cause.
+- **Label quality** — new data may have noisier or inconsistent labels.
+- **Class imbalance** — the new data may have a different class distribution than the original.
+- **Data leakage removed** — sometimes the original model benefited from leakage that isn't present in the new data (meaning the old accuracy was inflated).
+
+**Preprocessing & pipeline**
+- **Feature engineering changes** — ensure the same transformations, scaling, and encoding are applied identically.
+- **Missing values** — new data may have nulls in columns that were previously complete.
+- **Schema changes** — new columns, renamed fields, or changed dtypes can silently break things.
+
+**Training setup**
+- **Train/test split** — are you evaluating on the same test set? If the test set changed, the drop may reflect a harder evaluation, not a worse model.
+- **Hyperparameters** — parameters tuned for the old data distribution may be suboptimal for the new one. Re-run hyperparameter search.
+- **Regularization** — if the new dataset is smaller or noisier, you may need stronger regularization.
+
+**Quickest diagnostic steps:**
+1. Evaluate the **new model on the old test set** and the **old model on the new test set** — this tells you whether the problem is the model or the data.
+2. Look at a **confusion matrix** diff between old and new models to see which classes degraded.
+3. Check **feature importance** shifts — if the most important features changed drastically, that points to data drift.
+
+If you share specifics (model type, data size, how much the accuracy dropped, etc.), I can help narrow it down further.

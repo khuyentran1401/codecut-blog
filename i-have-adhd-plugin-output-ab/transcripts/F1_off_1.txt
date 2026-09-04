@@ -1,0 +1,23 @@
+Here are the key things to investigate, roughly in order of likelihood:
+
+**Data issues (check first)**
+- **Data drift** — compare distributions of features and target between old and new data. Shifts in the underlying data are the most common cause.
+- **Label quality** — are the new labels correct and consistent with the old labeling scheme?
+- **Class imbalance change** — did the ratio of classes shift in the new data?
+- **Data leakage removed** — sometimes the old model was accidentally leaking, and the new data doesn't have that leak (accuracy drops but the new model is actually more honest).
+
+**Training setup**
+- **Train/test split contamination** — make sure you're evaluating on a held-out set that reflects the same distribution you care about.
+- **Preprocessing changes** — did any feature engineering, scaling, or encoding change between runs?
+- **Hyperparameters** — if you kept the same hyperparameters, they may no longer be optimal for the new data distribution.
+
+**Evaluation**
+- **Are you comparing on the same test set?** If the test set changed too, the drop may reflect a harder evaluation, not a worse model.
+- **Metric choice** — accuracy can be misleading with imbalanced classes. Check precision, recall, F1, and confusion matrices.
+
+**Quick diagnostic steps:**
+1. Train on old data, evaluate on new data (and vice versa) — this isolates whether it's a data shift problem.
+2. Combine old + new data, retrain, and compare — see if blending helps.
+3. Look at the specific examples the new model gets wrong — patterns there often reveal the root cause.
+
+Want me to help you dig into any of these with your actual data or code?

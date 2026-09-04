@@ -1,0 +1,80 @@
+## Vectorized ops vs `.apply()` in pandas
+
+**Vectorized operations** run in compiled C/NumPy — they operate on entire columns at once without Python-level loops. `.apply()` calls a Python function once per row (or group), so it pays the Python interpreter overhead on every iteration.
+
+### Speed difference
+
+| Operation | Mechanism | Relative speed |
+|---|---|---|
+| `df["a"] + df["b"]` | NumPy vectorized | **1x** (baseline) |
+| `df.apply(lambda r: r["a"] + r["b"], axis=1)` | Python loop per row | **50–200x slower** |
+| `np.where(df["a"] > 0, df["a"], 0)` | NumPy vectorized | ~1x |
+| `df["a"].apply(lambda x: x if x > 0 else 0)` | Python loop per cell | 20–100x slower |
+
+On a 1M-row DataFrame, that's the difference between 5 ms and 500 ms+.
+
+### Why vectorized is faster
+
+1. **No per-element Python overhead** — the loop runs in C, not the Python interpreter
+2. **Cache-friendly memory access** — contiguous NumPy arrays vs boxed Python objects
+3. **SIMD / CPU optimizations** — NumPy/pandas can use hardware-level parallelism
+
+### When to use vectorized (most of the time)
+
+- Arithmetic: `df["price"] * df["qty"]`
+- Conditionals: `np.where()`, `np.select()`, `df.where()`, `df.mask()`
+- String ops: `df["name"].str.lower()`, `.str.contains()`
+- Datetime ops: `df["ts"].dt.year`, `pd.to_datetime()`
+- Aggregations: `.sum()`, `.mean()`, `.cumsum()`
+- Filling/shifting: `.fillna()`, `.shift()`, `.clip()`
+
+### When `.apply()` is actually the right choice
+
+1. **Complex row logic that can't be expressed as array ops** — e.g., calling an external API per row, building a nested dict, or logic with early returns/exceptions that have no vectorized equivalent.
+
+2. **GroupBy with custom aggregation** — `df.groupby("id").apply(custom_func)` when no built-in aggregation covers your case (e.g., fitting a model per group, computing a custom rolling metric).
+
+3. **Small DataFrames where speed doesn't matter** — under ~1K rows, the overhead is negligible and readability wins.
+
+4. **Operating on non-numeric/irregular data** — e.g., parsing JSON blobs, calling regex with branching logic, or transforming nested structures where `str.extract` doesn't cover it.
+
+5. **Prototype/exploration** — when you need to get something working fast and will optimize later.
+
+### Decision rule
+
+```
+Can I express this with built-in pandas/NumPy ops?
+  YES → use vectorized (always faster, usually clearer)
+  NO  → Can I use .str / .dt accessor methods?
+    YES → use those
+    NO  → Is the DataFrame large (>10K rows) and performance matters?
+      YES → try to restructure into vectorized ops, or use
+            np.vectorize (slight speedup) or Cython/Numba
+      NO  → .apply() is fine
+```
+
+### Common `.apply()` traps (vectorized alternatives)
+
+```python
+# BAD: row-wise apply for conditional
+df["label"] = df.apply(lambda r: "high" if r["val"] > 100 else "low", axis=1)
+
+# GOOD: np.where
+df["label"] = np.where(df["val"] > 100, "high", "low")
+
+# BAD: apply for multiple conditions
+df["tier"] = df.apply(lambda r: assign_tier(r["score"]), axis=1)
+
+# GOOD: np.select
+conditions = [df["score"] > 90, df["score"] > 70, df["score"] > 50]
+choices = ["gold", "silver", "bronze"]
+df["tier"] = np.select(conditions, choices, default="basic")
+
+# BAD: apply to combine strings
+df["full"] = df.apply(lambda r: r["first"] + " " + r["last"], axis=1)
+
+# GOOD: direct string concatenation (vectorized)
+df["full"] = df["first"] + " " + df["last"]
+```
+
+**Next:** pick one `.apply()` call in your code and check if it fits the vectorized alternatives above.

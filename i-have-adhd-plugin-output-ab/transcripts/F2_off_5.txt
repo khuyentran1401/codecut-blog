@@ -1,0 +1,40 @@
+Here's a systematic checklist, roughly ordered by likelihood and ease of checking:
+
+## 1. Data volume changes
+- Did input data size spike? Check row counts and file sizes for recent loads.
+- A new upstream source or backfill can silently 5x your data.
+
+## 2. Query plans / missing indexes
+- Run `EXPLAIN ANALYZE` on the slowest queries. Look for sequential scans that used to be index scans.
+- Common cause: a schema migration dropped or invalidated an index, or statistics are stale (`ANALYZE`/`VACUUM` not running).
+
+## 3. Resource contention
+- Check if something new is running concurrently — another job, a reporting query, a backup.
+- Look at CPU, memory, disk I/O, and network during the job window (`top`, `iostat`, cloud monitoring).
+
+## 4. Infrastructure changes
+- Smaller instance type, reduced disk IOPS, or a moved database endpoint adding latency.
+- Check recent infra/terraform changes.
+
+## 5. Code changes
+- `git log` on the ETL repo for the timeframe the slowdown started. Look for new joins, removed `WHERE` clauses, or changed batch sizes.
+- An `O(n²)` loop or missing pagination can hide until data grows.
+
+## 6. External dependencies
+- API rate limits, slower responses from a third-party service, or network throttling.
+- Check request latency logs.
+
+## Quick diagnostic steps
+
+```bash
+# When did it start?
+# Compare job duration over time from your scheduler (Airflow, cron logs, etc.)
+
+# Check data volume growth
+SELECT COUNT(*), DATE(created_at) FROM source_table GROUP BY 2 ORDER BY 2 DESC LIMIT 14;
+
+# Find the slowest stage
+# Most orchestrators log per-task duration — find which task went from 5 min to 2 hours
+```
+
+The single highest-value first step: **find which specific stage/task got slower**, then check if the data volume for that stage changed. That narrows the search dramatically.

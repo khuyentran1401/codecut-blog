@@ -1,0 +1,74 @@
+## Vectorized ops vs `.apply()` in pandas
+
+**Vectorized operations** run in compiled C/NumPy under the hood. `.apply()` runs a Python function row-by-row (or column-by-column) with Python interpreter overhead per element.
+
+### Speed difference
+
+| Operation | Mechanism | Typical speedup vs `.apply()` |
+|---|---|---|
+| `df['a'] + df['b']` | NumPy vectorized | 10–100x |
+| `df['a'].str.upper()` | pandas string accessor | 5–50x |
+| `np.where(condition, x, y)` | NumPy vectorized | 10–100x |
+| `df.apply(func, axis=1)` | Python loop in disguise | 1x (baseline) |
+
+On a 1M-row DataFrame, vectorized addition takes ~2ms; `.apply(lambda r: r['a'] + r['b'], axis=1)` takes ~5–10 seconds.
+
+### Why `.apply()` is slow
+
+Each call to your Python function:
+1. Boxes/unboxes Python objects per row
+2. Pays Python interpreter overhead per iteration
+3. Cannot use SIMD or cache-friendly memory layout
+
+It's literally a `for` loop with extra bookkeeping.
+
+### When vectorized wins (use these first)
+
+- **Arithmetic**: `df['c'] = df['a'] * df['b'] + 1`
+- **Conditionals**: `np.where(df['a'] > 0, df['a'], 0)` or `np.select`
+- **String ops**: `df['name'].str.strip().str.lower()`
+- **Datetime ops**: `df['ts'].dt.hour`
+- **Grouped aggregation**: `df.groupby('key')['val'].sum()` — built-in aggs (sum, mean, std, min, max, first, last) are C-optimized
+
+### When `.apply()` is actually the right choice
+
+1. **Complex branching logic that can't be expressed as `np.select`** — if your function has 10+ branches with interdependent conditions, forcing it into nested `np.where` makes unreadable code. Readability wins when performance is acceptable.
+
+2. **Calling external APIs or I/O per row** — the bottleneck is network/disk, not Python overhead. `.apply()` is fine because the loop cost is negligible vs the I/O cost.
+
+3. **Operating on non-numeric, non-string types** — e.g., parsing nested JSON, calling a library that only accepts scalar inputs, manipulating custom objects. No vectorized path exists.
+
+4. **GroupBy with custom aggregation that truly can't decompose** — `df.groupby('key').apply(custom_func)` when `custom_func` needs the full sub-DataFrame (e.g., rolling regression per group, or returning a reshaped result).
+
+5. **Small DataFrames (< ~1,000 rows)** — the absolute time difference is negligible (milliseconds either way). Write what's clearest.
+
+### Decision checklist
+
+```
+Can I write it with +, -, *, /, >, <, &, | on columns?  → vectorized
+Can I use np.where / np.select?                         → vectorized
+Can I use .str / .dt accessor?                          → vectorized
+Is it a standard groupby agg (sum/mean/min/max)?        → vectorized
+None of the above?                                      → .apply() is fine
+```
+
+### One common trap
+
+```python
+# Looks vectorized, but .apply() is hiding inside:
+df['result'] = df['col'].apply(lambda x: x**2)
+
+# Actually vectorized:
+df['result'] = df['col'] ** 2
+```
+
+If a lambda does something NumPy already supports, drop the `.apply()`.
+
+### `.apply()` alternatives when you need row logic but want speed
+
+- **`np.vectorize`** — slightly faster than `.apply()` but still a Python loop; main benefit is cleaner syntax
+- **List comprehension** — `[func(a, b) for a, b in zip(df['a'], df['b'])]` is 2–5x faster than `.apply(axis=1)` because it skips Series construction per row
+- **`itertuples()`** — faster than `.apply()` for row iteration when you must loop
+- **Numba `@jit`** — JIT-compiles your function to machine code; gets near-vectorized speed for numeric logic
+
+**Next:** if you have a specific `.apply()` call you're unsure about, paste it and I'll show the vectorized equivalent.

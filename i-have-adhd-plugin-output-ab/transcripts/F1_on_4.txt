@@ -1,0 +1,11 @@
+Check these in order:
+
+1. **Data quality** — Compare new vs. old training data distributions. Look for label noise, class imbalance shifts, missing values, or schema changes (`new_df.describe()` vs `old_df.describe()`)
+2. **Data leakage removed accidentally** — If the old model had leakage that inflated metrics, the "drop" may be the real performance
+3. **Feature drift** — Check if feature distributions shifted between old and new data (`scipy.stats.ks_2samp` per feature)
+4. **Evaluation consistency** — Confirm you're evaluating on the same test set with the same metrics and preprocessing
+5. **Hyperparameters/random seed** — Retraining may have changed defaults or lost tuned hyperparameters
+
+**Next:** Run `old_data.describe()` side-by-side with `new_data.describe()` and check for distribution shifts in your top 5 most important features.
+
+Separately: if you have the code/data in this directory, I can dig into it directly. Want me to look?

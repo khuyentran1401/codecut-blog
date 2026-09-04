@@ -1,0 +1,15 @@
+Check these in order:
+
+1. **Data drift** — Compare distributions of key features between old and new training data. Plot histograms or run a KS test. If distributions shifted, that's your likely culprit.
+
+2. **Label quality** — Spot-check 50–100 labels in the new data. Mislabeled or inconsistently labeled examples poison accuracy fast.
+
+3. **Class balance** — Compare class proportions old vs new. A shift from 50/50 to 90/10 changes what the model optimizes for.
+
+4. **Data leakage removed** — Sometimes old models were accidentally cheating (target leakage, train/test bleed). New data without that leak shows "real" (lower) performance.
+
+5. **Preprocessing changes** — Verify feature engineering, scaling, and encoding are identical. A silent schema change (new categories, missing columns, different units) breaks things quietly.
+
+**Fastest diagnostic:** Retrain on the *old* data with your current pipeline. If accuracy recovers, the problem is the data. If it doesn't, the problem is your code/pipeline.
+
+Next: run that old-data retrain test and compare metrics side by side.

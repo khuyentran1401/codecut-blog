@@ -1,0 +1,3 @@
+F1|My model accuracy dropped after I retrained it on the new data. What should I look at?
+F2|Our nightly ETL job started taking 3 hours instead of 40 minutes. Where should I start looking?
+F3|Explain the difference between .apply() and vectorized operations in pandas, and when .apply() is actually the right choice. I want enough detail to decide.

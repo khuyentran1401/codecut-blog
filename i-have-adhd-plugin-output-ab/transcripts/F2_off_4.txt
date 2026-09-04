@@ -1,0 +1,33 @@
+Here's a systematic checklist, roughly ordered by likelihood and ease of checking:
+
+**1. Data volume changes**
+- Did input data size spike? Check row counts / file sizes for recent runs vs. a week ago.
+- A new upstream source or backfill can silently 10x your data.
+
+**2. Query plans & database side**
+- Check for missing indexes, stale statistics, or lock contention.
+- Run `EXPLAIN ANALYZE` on your heaviest queries — compare plans from before the slowdown.
+- Look for full table scans that used to be index scans.
+
+**3. Resource contention**
+- Is something else competing for CPU/memory/disk I/O during the job window? Check `top`, `iostat`, cloud monitoring dashboards.
+- Did the instance size change, or did you hit a shared-resource neighbor?
+
+**4. Recent code or config changes**
+- `git log --since="2 weeks ago"` on the ETL repo. Even "harmless" changes (new column, filter tweak, join reorder) can blow up runtimes.
+- Check dependency versions — ORM or driver upgrades can change query behavior.
+
+**5. Parallelism & partitioning**
+- Did a parallelism setting get dropped? (worker count, partition count, thread pool size)
+- Are tasks that used to run in parallel now serialized?
+
+**6. Network & external APIs**
+- If you call external services, check for timeouts, retries, or rate-limit backoff.
+- DNS resolution issues or network latency to a remote DB can quietly add up.
+
+**Quickest wins to start:**
+1. Compare input data volume (before vs. now).
+2. Check `git log` for recent changes.
+3. Look at per-step timing in your ETL logs to isolate *which step* got slower — that narrows everything else.
+
+Once you know which step accounts for the extra ~2h20m, the root cause is usually straightforward. Want help digging into a specific area?

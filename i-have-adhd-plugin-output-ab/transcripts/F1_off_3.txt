@@ -1,0 +1,28 @@
+Here are the key things to investigate, roughly in order of likelihood:
+
+## Data Issues (check first)
+- **Data drift** — Compare distributions of features and target between old and new data. Shifted distributions are the most common cause.
+- **Label quality** — Check for labeling errors, inconsistent annotation guidelines, or changed label definitions in the new data.
+- **Class imbalance shift** — Did the ratio of classes change significantly?
+- **Data leakage removed** — Sometimes the old model was accidentally benefiting from leakage that the new data doesn't have.
+
+## Preprocessing / Pipeline Issues
+- **Feature engineering changes** — Were any transformations, scalers, or encoders refit on the new data? A scaler fit on different distributions can hurt.
+- **Missing values** — Does the new data have nulls in columns that were previously complete?
+- **Schema changes** — New/removed/renamed columns, changed dtypes, or different categorical levels.
+
+## Training Issues
+- **Train/test split** — Are you evaluating on the same test set, or a new one? A harder test set looks like a worse model.
+- **Hyperparameters** — Parameters tuned for old data may not be optimal for new data. Consider re-tuning.
+- **Overfitting to old data** — If you're fine-tuning, the old model may have overfit to patterns that don't generalize.
+
+## Quick Diagnostic Steps
+
+1. **Evaluate the old model on the new test data** — if it also drops, the data shifted, not the training.
+2. **Evaluate the new model on the old test data** — if it does fine, your new test set is just harder.
+3. **Compare feature importance** between old and new models.
+4. **Look at the errors** — are mistakes concentrated in a specific segment or class?
+
+The single most informative step is #1: test your old model on the new data. That tells you immediately whether the problem is the data or the training.
+
+Want me to help you write code to diagnose any of these?

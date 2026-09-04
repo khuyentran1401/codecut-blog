@@ -1,0 +1,74 @@
+## `.apply()` vs Vectorized Operations in Pandas
+
+### Vectorized operations
+
+Vectorized operations run in optimized C/NumPy loops under the hood. They operate on entire columns or DataFrames at once without Python-level iteration.
+
+```python
+# Vectorized — fast
+df["total"] = df["price"] * df["quantity"]
+df["name_upper"] = df["name"].str.upper()
+df["date"] = pd.to_datetime(df["raw_date"])
+df["clipped"] = df["value"].clip(0, 100)
+```
+
+**Why they're fast:** The loop happens in compiled C code. No per-row Python interpreter overhead. NumPy and pandas expose thousands of these: arithmetic, string methods (`.str.*`), datetime methods (`.dt.*`), `np.where`, `np.select`, `.clip()`, `.fillna()`, `.replace()`, etc.
+
+### `.apply()`
+
+`.apply()` calls a Python function once per row (or column). Each call crosses the Python-C boundary and invokes the interpreter.
+
+```python
+# .apply() — slow for large data
+df["total"] = df.apply(lambda row: row["price"] * row["quantity"], axis=1)
+```
+
+**Typical slowdown:** 10x–100x slower than the vectorized equivalent, depending on DataFrame size and function complexity. On a million rows, a simple arithmetic `.apply()` can take seconds where vectorized takes milliseconds.
+
+### When `.apply()` is actually the right choice
+
+| Scenario | Why `.apply()` wins |
+|---|---|
+| **Complex row-wise logic with branching** | When you need `if/elif/else` chains across multiple columns that can't be expressed with `np.select` or `np.where` cleanly. |
+| **Calling external APIs or I/O per row** | The Python function overhead is negligible compared to network latency. |
+| **Using a library that only accepts scalars** | e.g., a geocoding library, a custom parser, regex with stateful logic. |
+| **Small DataFrames (< ~1,000 rows)** | The absolute time difference is negligible. Readability wins. |
+| **Prototyping** | Get it working first, optimize later if it's a bottleneck. |
+| **Returning complex objects** | When each row needs to produce a dict, list, or custom object that doesn't fit a vectorized pattern. |
+
+### Decision checklist
+
+1. **Can you express it with built-in pandas/numpy ops?** (`+`, `*`, `.str.*`, `.dt.*`, `np.where`, `np.select`, `.map()` with a dict) → Use those. Always faster.
+
+2. **Is it a simple mapping from one value to another?** → Use `.map()` with a dict or Series. Faster than `.apply()`.
+
+3. **Is it element-wise on a single column?** → Try `.map()` or a vectorized NumPy ufunc first. `.apply()` on a Series (not DataFrame) is your next option — it's faster than `df.apply(..., axis=1)` because it avoids constructing a Series per row.
+
+4. **Does it need multiple columns but is still expressible as conditions?**
+   ```python
+   # Prefer this over .apply()
+   conditions = [
+       df["age"] < 18,
+       df["age"] < 65,
+   ]
+   choices = ["minor", "adult"]
+   df["category"] = np.select(conditions, choices, default="senior")
+   ```
+
+5. **Is the logic genuinely complex, stateful, or calls non-vectorized code?** → `.apply()` is the right tool. Don't contort your code into unreadable vectorized gymnastics just to avoid it.
+
+### Common trap
+
+People often reach for `.apply()` out of habit when a vectorized solution exists:
+
+```python
+# Bad — .apply() for something pandas already does
+df["year"] = df["date"].apply(lambda x: x.year)
+
+# Good — vectorized accessor
+df["year"] = df["date"].dt.year
+```
+
+### Bottom line
+
+**Default to vectorized.** Reach for `.apply()` when the per-row logic is genuinely complex, involves external calls, or when the DataFrame is small enough that performance doesn't matter. If you're unsure whether a vectorized alternative exists, check the pandas `.str`, `.dt`, and NumPy docs first — the answer is usually yes.
