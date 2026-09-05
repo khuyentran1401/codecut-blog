@@ -4,7 +4,7 @@ Three prompts, five runs each per condition. Each output shown is the **median-l
 
 Same model (Claude Opus 5), same prompt, fresh session per run, `outputStyle` pinned to `default`. The only difference between conditions is whether `~/.claude/.i-have-adhd-always` exists. Method and environment are in `README.md`.
 
-## F1: Diagnostic question with no single answer
+## Prompt 1: Diagnostic question with no single answer
 
 **Prompt**
 
@@ -87,7 +87,7 @@ This is the case where the rules have the most to work with, and the five-run ra
 
 ---
 
-## F2: Diagnostic question with no single answer
+## Prompt 2: Diagnostic question with no single answer
 
 **Prompt**
 
@@ -208,7 +208,7 @@ The word count only drops 14%, but non-blank lines drop from 26 to 17 and list i
 
 ---
 
-## F3: Explicit request for depth, the control
+## Prompt 3: Explicit request for depth, the control
 
 **Prompt**
 
