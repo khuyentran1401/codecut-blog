@@ -33,7 +33,7 @@ batch() {
     [ -z "${cid:-}" ] && continue
     for r in $(seq 1 "$RUNS"); do
       work="$WORKROOT/${cond}_${cid}_${r}"
-      rm -rf "$work"; cp -R "$HERE/repo" "$work"
+      rm -rf "$work"; mkdir -p "$work"
       ( cd "$work" && claude -p "$prompt" \
           --permission-mode acceptEdits \
           --settings "$SETTINGS" < /dev/null ) \
@@ -46,7 +46,7 @@ batch() {
 # Verify the arm before spending runs on it.
 assert_arm() {
   local want="$1"
-  got=$(cd "$HERE/repo" && claude -p \
+  got=$(cd "$WORKROOT" && claude -p \
     'Do you have a ruleset in your context about ADHD-friendly output? Answer YES or NO only.' \
     --settings "$SETTINGS" < /dev/null 2>&1 | head -1 | tr -d '[:space:]')
   case "$got" in

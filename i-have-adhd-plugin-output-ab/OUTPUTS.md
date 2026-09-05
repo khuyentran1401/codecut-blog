@@ -446,21 +446,6 @@ So the rules are conditional, not a length cap. What survives even here is the s
 
 ---
 
-## Where the effect disappears
-
-Not every prompt shows this. Four cases were run and dropped, because their correct answer is short and the plugin had nothing to rearrange:
-
-| Prompt | Default | With the plugin |
-| --- | ---: | ---: |
-| A pasted `KeyError` traceback | 26 words | 24 words |
-| "How do I make pytest stop at the first failure?" | 17 words | 23 words |
-| "`pytest` fails, look at `features.py` and tell me why" | 111 words | 90 words |
-| "My pandas pipeline uses too much memory" | 130 words | 124 words |
-
-The effect needs a question the default answers at length. On the file-reading case the closing next action appeared in only 2 of 5 plugin runs, against 5 of 5 on all three kept cases.
-
-Preamble openers such as "Great question" or "Let me" appeared **zero times in every run of both conditions**, so what the plugin changes is arrangement, not politeness.
-
 ## How to reproduce
 
 ```bash
