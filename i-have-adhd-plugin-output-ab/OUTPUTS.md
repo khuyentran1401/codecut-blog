@@ -10,8 +10,6 @@ Same model (Claude Opus 5), same prompt, fresh session per run, `outputStyle` pi
 
 > My model accuracy dropped after I retrained it on the new data. What should I look at?
 
-**Rules under test**: Rule 9 (five ranked beats ten unranked), rule 3 (end with one next action)
-
 | Median of 5 runs | Default | With the plugin |
 | --- | ---: | ---: |
 | Prose words | 323 | 170 (-47%) |
@@ -72,19 +70,6 @@ Check these in order:
 **Next:** Run `old_data.describe()` vs `new_data.describe()` side by side and check for columns with large mean/std shifts. That's the fastest way to spot data drift.
 ````
 
-**What changed**
-
-- The default spreads **eleven bullets across three headings**, then adds a separate four-item numbered list of diagnostic steps. The plugin returns **five numbered items and no bullets at all**, in all five runs.
-- The default closes with a claim and an offer: data drift is the most common culprit, want help writing code? The plugin closes with a command: run `old_data.describe()` beside `new_data.describe()`.
-- Nothing is missing from the shorter version. Data drift, label quality, lost leakage, class imbalance, and hyperparameters appear in both.
-- Non-blank lines drop from 19 to 8, so the shorter answer is a shorter thing to look at, not the same content packed tighter.
-
-**What it means**
-
-The 47% cut comes from collapsing a taxonomy into a ranked list. The default is organized for completeness: here are the categories, pick one. The plugin is organized for action: here are five in order, run this first.
-
-This is the case where the rules have the most to work with, and the five-run ranges do not overlap. The longest plugin run at 215 words is shorter than the shortest default run at 277.
-
 ---
 
 ## Prompt 2: Diagnostic question with no single answer
@@ -92,8 +77,6 @@ This is the case where the rules have the most to work with, and the five-run ra
 **Prompt**
 
 > Our nightly ETL job started taking 3 hours instead of 40 minutes. Where should I start looking?
-
-**Rules under test**: Rule 9, rule 3, rule 1 (lead with the next action)
 
 | Median of 5 runs | Default | With the plugin |
 | --- | ---: | ---: |
@@ -192,19 +175,6 @@ for phase in [extract, transform, load]:
 
 **Next step:** Check whether this is a data problem or a code problem — compare today's source row counts against last week's. If counts are similar, focus on indexes and recent code changes.
 ````
-
-**What changed**
-
-- The default lists **five numbered headings containing sixteen bullets**, then a shell block, then a closing paragraph, then an offer to help further. The plugin gives **one command, then exactly five ranked causes**, then one diagnostic.
-- The default's most useful sentence, find which step got slower, is the **second-to-last line**. The plugin opens with `git log --since="1 week ago"` before anything else.
-- Bullet lines go from 13 per run to 0. Numbered lines go from 0 to exactly 5, in all five runs.
-- Both name the same causes: data volume, indexes, resource contention, recent code changes.
-
-**What it means**
-
-Same content, opposite arrangement. The default surveys the space and puts the recommendation last. The plugin ranks the space and puts a runnable command first.
-
-The word count only drops 14%, but non-blank lines drop from 26 to 17 and list items from 13 to 5. This is the clearest case in the set that **scannability and length are different measurements**. A reader skimming the default has thirteen equal-weight bullets to triage. A reader skimming the plugin's has five, ranked, with a command at the top.
 
 ---
 
@@ -430,19 +400,6 @@ df["full"] = df["first"] + " " + df["last"]
 
 **Next:** pick one `.apply()` call in your code and check if it fits the vectorized alternatives above.
 ````
-
-**What changed**
-
-- Both stay long, and both keep their code examples and comparison tables. The plugin's version is 16% shorter, which sits inside the run-to-run spread of either condition.
-- The plugin still restructures. It ends with a plain-text decision table mapping each situation to a verdict, where the default ends with a prose caveat about single-Series `.apply()`.
-- The plugin still closes with a next step, offering to convert a specific `.apply()` call if you paste one. The default asks nothing and stops.
-- The plugin numbers its five legitimate uses of `.apply()`. The default presents four as bold headings.
-
-**What it means**
-
-This is the control, and it holds. Asked for detail outright, the plugin does not compress, matching its own written exception: when the user asks to explain or walk through something, explain fully and let the body run as long as the topic needs.
-
-So the rules are conditional, not a length cap. What survives even here is the shape: the closing next action appears in all five plugin runs and none of the five default runs, which is the one behavior that shows up on every prompt tested.
 
 ---
 
