@@ -1,0 +1,102 @@
+{
+  "48": [
+    {
+      "id": "5",
+      "text": "The moratorium could impact development timelines and potentially affect housing supply in the targeted areas.",
+      "why": "no one at the meeting raised an impact on development timelines or housing supply",
+      "removed_by_reviewer": false,
+      "checker_flagged": true
+    },
+    {
+      "id": "6",
+      "text": "There is a risk that the study may take longer than expected, delaying any potential updates to zoning and building regulations.",
+      "why": "no one raised a risk of the study running long",
+      "removed_by_reviewer": false,
+      "checker_flagged": true
+    }
+  ],
+  "49": [
+    {
+      "id": "5",
+      "text": "There could be challenges in maintaining the momentum of negotiations with developers.",
+      "why": "no one raised a risk to negotiation momentum",
+      "removed_by_reviewer": true,
+      "checker_flagged": true
+    }
+  ],
+  "76": [
+    {
+      "id": "2",
+      "text": "The postponed item 52 will be reviewed by the community for 90 days with an opportunity for public comment.",
+      "why": "speakers asked for 90 days; the council set a date certain of March 2nd instead",
+      "removed_by_reviewer": false,
+      "checker_flagged": false
+    },
+    {
+      "id": "3",
+      "text": "Postponing the item may delay the implementation of the shelter animal health improvement plan.",
+      "why": "no one raised a delay to the shelter animal plan",
+      "removed_by_reviewer": false,
+      "checker_flagged": true
+    }
+  ],
+  "79": [
+    {
+      "id": "3",
+      "text": "The council approved a memorandum of understanding with the Service Employees International Union (Local 71721) citywide.",
+      "why": "the SEIU item is read into the record at the end, never voted on",
+      "removed_by_reviewer": true,
+      "checker_flagged": true
+    },
+    {
+      "id": "4",
+      "text": "Follow up on the December 1st meeting agenda to determine what items will be discussed.",
+      "why": "a speaker mentions December 1st; nobody is asked to follow up",
+      "removed_by_reviewer": false,
+      "checker_flagged": true
+    }
+  ],
+  "117": [
+    {
+      "id": "3",
+      "text": "No specific risks were identified in the discussion, though the approval of additional funds involves the usual financial risk associated with event planning.",
+      "why": "'the usual financial risk associated with event planning' is the model's own",
+      "removed_by_reviewer": false,
+      "checker_flagged": true
+    }
+  ],
+  "125": [
+    {
+      "id": "3",
+      "text": "There is a potential for increased costs if the revised fee structure does not adequately cover staffing expenses.",
+      "why": "no one raised a risk that the new fees undercover staffing",
+      "removed_by_reviewer": true,
+      "checker_flagged": true
+    }
+  ],
+  "144": [
+    {
+      "id": "2",
+      "text": "Councilwoman Gonzales will present the recommendation following her arrival from a graduation event.",
+      "why": "she is arriving from a graduation, but she is not presenting the recommendation, which was already approved",
+      "removed_by_reviewer": false,
+      "checker_flagged": true
+    }
+  ],
+  "171": [
+    {
+      "id": "1",
+      "text": "The council voted to oppose Proposition Six, which seeks to repeal the 2017 tax initiative and voter approval for future gas and vehicle taxes.",
+      "why": "the transcript ends on 'please cast your votes' with no result",
+      "removed_by_reviewer": false,
+      "checker_flagged": true
+    },
+    {
+      "id": "3",
+      "text": "Opposing Proposition Six could result in the loss of significant state funding for infrastructure projects, including $8 million annually for streets and roads, which could grow to $11 million by FY 20 and beyond.",
+      "why": "inverted: Proposition Six passing would cost the funding, not opposing it",
+      "removed_by_reviewer": false,
+      "checker_flagged": false
+    }
+  ]
+}

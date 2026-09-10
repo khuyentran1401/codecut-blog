@@ -1,0 +1,317 @@
+[
+  {
+    "id": "1",
+    "section": "decisions",
+    "text": "The council approved the motion to award contracts for the purchase and delivery of new tires with an annual aggregate amount not to exceed $770,000 citywide.",
+    "draft": "44",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "2",
+    "section": "action_items",
+    "text": "The council will discuss a procurement study and allocate $250,000 for it later in the day.",
+    "draft": "44",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "3",
+    "section": "action_items",
+    "text": "The council will consider increasing local business preference in future RFPs, with a proposed increase from 5% to 15%.",
+    "draft": "44",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "4",
+    "section": "risks",
+    "text": "There is a risk that local businesses may not receive a significant portion of the contract, despite the intent to support them.",
+    "draft": "44",
+    "checker_supported": true,
+    "survives_free_rewrite": false,
+    "truly_unsupported": false
+  },
+  {
+    "id": "5",
+    "section": "risks",
+    "text": "The current local business preference may not be sufficient to meaningfully impact the local economy.",
+    "draft": "44",
+    "checker_supported": true,
+    "survives_free_rewrite": false,
+    "truly_unsupported": false
+  },
+  {
+    "id": "1",
+    "section": "decisions",
+    "text": "The City Council approved the ordinance establishing a 12-month moratorium on the issuance of building permits for new residential standalone construction along commercial and transportation corridors in West Long Beach.",
+    "draft": "48",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "2",
+    "section": "decisions",
+    "text": "The ordinance was declared urgent and will take effect immediately.",
+    "draft": "48",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "3",
+    "section": "decisions",
+    "text": "The matter will be referred to the Planning Commission and planning staff to initiate a study of potential amendments to existing zoning and building regulations.",
+    "draft": "48",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "4",
+    "section": "action_items",
+    "text": "Planning Commission and planning staff will conduct a study to align zoning and building regulations with the city's more recent land use and urban design elements of the general plan.",
+    "draft": "48",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "5",
+    "section": "risks",
+    "text": "The moratorium could impact development timelines and potentially affect housing supply in the targeted areas.",
+    "draft": "48",
+    "checker_supported": false,
+    "survives_free_rewrite": true,
+    "truly_unsupported": true
+  },
+  {
+    "id": "6",
+    "section": "risks",
+    "text": "There is a risk that the study may take longer than expected, delaying any potential updates to zoning and building regulations.",
+    "draft": "48",
+    "checker_supported": false,
+    "survives_free_rewrite": true,
+    "truly_unsupported": true
+  },
+  {
+    "id": "1",
+    "section": "decisions",
+    "text": "The council supports the execution of a Second Amendment to the Exclusive Negotiation Agreement with Howard CDB for the continuation of negotiations on the proposed development of the former Long Beach Armory.",
+    "draft": "49",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "2",
+    "section": "action_items",
+    "text": "Continue working with developers to finalize the project agreement and secure necessary grants.",
+    "draft": "49",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "3",
+    "section": "action_items",
+    "text": "Support the adaptive reuse of the Armory Building and the inclusion of 100% affordable housing.",
+    "draft": "49",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "4",
+    "section": "risks",
+    "text": "The project may face delays due to the need for additional time to secure state and infrastructure grants.",
+    "draft": "49",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "5",
+    "section": "risks",
+    "text": "There could be challenges in maintaining the momentum of negotiations with developers.",
+    "draft": "49",
+    "checker_supported": false,
+    "survives_free_rewrite": false,
+    "truly_unsupported": true
+  },
+  {
+    "id": "1",
+    "section": "decisions",
+    "text": "The council voted to postpone item 52 to March 2nd.",
+    "draft": "76",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "2",
+    "section": "action_items",
+    "text": "The postponed item 52 will be reviewed by the community for 90 days with an opportunity for public comment.",
+    "draft": "76",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": true
+  },
+  {
+    "id": "3",
+    "section": "risks",
+    "text": "Postponing the item may delay the implementation of the shelter animal health improvement plan.",
+    "draft": "76",
+    "checker_supported": false,
+    "survives_free_rewrite": true,
+    "truly_unsupported": true
+  },
+  {
+    "id": "1",
+    "section": "decisions",
+    "text": "The council adopted a resolution to address certain natural gas transmission rates.",
+    "draft": "79",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "2",
+    "section": "decisions",
+    "text": "The council adopted a resolution to increase the Low-Income Gas discount rate from 5% to 20% citywide.",
+    "draft": "79",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "3",
+    "section": "decisions",
+    "text": "The council approved a memorandum of understanding with the Service Employees International Union (Local 71721) citywide.",
+    "draft": "79",
+    "checker_supported": false,
+    "survives_free_rewrite": false,
+    "truly_unsupported": true
+  },
+  {
+    "id": "4",
+    "section": "action_items",
+    "text": "Follow up on the December 1st meeting agenda to determine what items will be discussed.",
+    "draft": "79",
+    "checker_supported": false,
+    "survives_free_rewrite": true,
+    "truly_unsupported": true
+  },
+  {
+    "id": "5",
+    "section": "risks",
+    "text": "Raising utility rates during a pandemic may pose financial risks to low-income residents.",
+    "draft": "79",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "1",
+    "section": "decisions",
+    "text": "The council approved the recommendation to increase appropriations in the Special Advertising and Promotion Fund group in the City Manager Department by $6,000 to support the annual Giving Gala 2020 event at the Long Beach Exchange.",
+    "draft": "117",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "2",
+    "section": "action_items",
+    "text": "The City Manager Department is to use the additional $6,000 for the support of the annual Giving Gala 2020 event at the Long Beach Exchange.",
+    "draft": "117",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "3",
+    "section": "risks",
+    "text": "No specific risks were identified in the discussion, though the approval of additional funds involves the usual financial risk associated with event planning.",
+    "draft": "117",
+    "checker_supported": false,
+    "survives_free_rewrite": true,
+    "truly_unsupported": true
+  },
+  {
+    "id": "1",
+    "section": "decisions",
+    "text": "The council concluded the public hearing and adopted a resolution amending the master fee and charges schedule for standby fire safety officer fees related to special events and filming citywide.",
+    "draft": "125",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "2",
+    "section": "action_items",
+    "text": "The fire safety officer fees will be revised to provide full cost recovery for staffing costs, with consumables and equipment maintenance costs removed and included in the citywide fee schedule.",
+    "draft": "125",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "3",
+    "section": "risks",
+    "text": "There is a potential for increased costs if the revised fee structure does not adequately cover staffing expenses.",
+    "draft": "125",
+    "checker_supported": false,
+    "survives_free_rewrite": false,
+    "truly_unsupported": true
+  },
+  {
+    "id": "1",
+    "section": "decisions",
+    "text": "The motion to increase appropriations in the general fund group and the Economic Development Department by $25,000 to support the creation of a community vision for business corridor improvements on historic Pine Avenue and the North Pine Neighborhood was approved.",
+    "draft": "144",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "2",
+    "section": "action_items",
+    "text": "Councilwoman Gonzales will present the recommendation following her arrival from a graduation event.",
+    "draft": "144",
+    "checker_supported": false,
+    "survives_free_rewrite": true,
+    "truly_unsupported": true
+  },
+  {
+    "id": "1",
+    "section": "decisions",
+    "text": "The council voted to oppose Proposition Six, which seeks to repeal the 2017 tax initiative and voter approval for future gas and vehicle taxes.",
+    "draft": "171",
+    "checker_supported": false,
+    "survives_free_rewrite": true,
+    "truly_unsupported": true
+  },
+  {
+    "id": "2",
+    "section": "action_items",
+    "text": "The City Attorney is tasked with preparing a resolution to formally oppose Proposition Six.",
+    "draft": "171",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": false
+  },
+  {
+    "id": "3",
+    "section": "risks",
+    "text": "Opposing Proposition Six could result in the loss of significant state funding for infrastructure projects, including $8 million annually for streets and roads, which could grow to $11 million by FY 20 and beyond.",
+    "draft": "171",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "truly_unsupported": true
+  }
+]
