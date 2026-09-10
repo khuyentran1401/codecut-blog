@@ -1,0 +1,110 @@
+[
+  {
+    "id": "1",
+    "section": "decisions",
+    "text": "The council approved the recommendation to increase appropriations in the Special Advertising and Promotion Fund group in the City Manager Department by $6,000 to support the annual Giving Gala 2020 event at the Long Beach Exchange.",
+    "draft": "117",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": false
+  },
+  {
+    "id": "2",
+    "section": "action_items",
+    "text": "The City Manager Department is to use the additional $6,000 for the support of the annual Giving Gala 2020 event at the Long Beach Exchange.",
+    "draft": "117",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": false
+  },
+  {
+    "id": "3",
+    "section": "risks",
+    "text": "No specific risks were identified in the discussion, though the approval of additional funds involves the usual financial risk associated with event planning.",
+    "draft": "117",
+    "checker_supported": false,
+    "survives_free_rewrite": true,
+    "survives_operations_only": false
+  },
+  {
+    "id": "1",
+    "section": "decisions",
+    "text": "The council concluded the public hearing and adopted a resolution amending the master fee and charges schedule for standby fire safety officer fees related to special events and filming citywide.",
+    "draft": "125",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": true
+  },
+  {
+    "id": "2",
+    "section": "action_items",
+    "text": "The fire safety officer fees will be revised to provide full cost recovery for staffing costs, with consumables and equipment maintenance costs removed and included in the citywide fee schedule.",
+    "draft": "125",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": true
+  },
+  {
+    "id": "3",
+    "section": "risks",
+    "text": "There is a potential for increased costs if the revised fee structure does not adequately cover staffing expenses.",
+    "draft": "125",
+    "checker_supported": false,
+    "survives_free_rewrite": false,
+    "survives_operations_only": false
+  },
+  {
+    "id": "4",
+    "section": "open_questions",
+    "text": "Which fees were calculated into the permits for the Belmont Shore Christmas parade, and is there an opportunity for negotiation?",
+    "draft": "125",
+    "checker_supported": false,
+    "survives_free_rewrite": false,
+    "survives_operations_only": false
+  },
+  {
+    "id": "1",
+    "section": "decisions",
+    "text": "The council adopted a resolution ordering the vacation of a portion of roadway between Solana Court and Pacific Avenue, District one.",
+    "draft": "83",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": false
+  },
+  {
+    "id": "2",
+    "section": "action_items",
+    "text": "Public Works Director Eric Lopez will provide a staff presentation on the item.",
+    "draft": "83",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": false
+  },
+  {
+    "id": "3",
+    "section": "action_items",
+    "text": "Joshua Hickman, the project management officer, will assist with answering questions related to the private development impacting the public right-of-way.",
+    "draft": "83",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": false
+  },
+  {
+    "id": "4",
+    "section": "risks",
+    "text": "No specific risks were mentioned in the transcript.",
+    "draft": "83",
+    "checker_supported": false,
+    "survives_free_rewrite": false,
+    "survives_operations_only": false
+  },
+  {
+    "id": "5",
+    "section": "open_questions",
+    "text": "Questions about the private development and its impact on the public right-of-way were raised but not fully addressed.",
+    "draft": "83",
+    "checker_supported": false,
+    "survives_free_rewrite": true,
+    "survives_operations_only": true
+  }
+]

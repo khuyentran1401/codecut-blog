@@ -1,0 +1,120 @@
+{
+  "44": {
+    "claims": [
+      {
+        "id": "1",
+        "section": "decisions",
+        "text": "The council approved the motion to award contracts for the purchase and delivery of new tires with an annual aggregate amount not to exceed $770,000 citywide."
+      },
+      {
+        "id": "2",
+        "section": "action_items",
+        "text": "The council will discuss a procurement study and allocate $250,000 for it later in the day."
+      },
+      {
+        "id": "3",
+        "section": "action_items",
+        "text": "The council will consider increasing local business preference in future RFPs, with a proposed increase from 5% to 15%."
+      },
+      {
+        "id": "4",
+        "section": "risks",
+        "text": "There is a risk that local businesses may not receive a significant portion of the contract, despite the intent to support them."
+      },
+      {
+        "id": "5",
+        "section": "risks",
+        "text": "The current local business preference may not be sufficient to meaningfully impact the local economy."
+      },
+      {
+        "id": "6",
+        "section": "open_questions",
+        "text": "How much industrial tire is the local company currently receiving under the contract?"
+      },
+      {
+        "id": "7",
+        "section": "open_questions",
+        "text": "What is the current local business preference percentage in the RFPs?"
+      }
+    ],
+    "free_rewrite": "**Corrected Summary:**\n\n**Decisions**  \n[1] The council approved the motion to award contracts for the purchase and delivery of new tires with an annual aggregate amount not to exceed $770,000 citywide.\n\n**Action Items**  \n[2] The council will discuss a procurement study and allocate $250,000 for it later in the day.  \n[3] The council will consider increasing local business preference in future RFPs, with a proposed increase from 5% to 15%.\n\n**Open Questions**  \n[6] How much industrial tire is the local company currently receiving under the contract?  \n[7] What is the current local business preference percentage in the RFPs?",
+    "operations_only": ""
+  },
+  "48": {
+    "claims": [
+      {
+        "id": "1",
+        "section": "decisions",
+        "text": "The City Council approved the ordinance establishing a 12-month moratorium on the issuance of building permits for new residential standalone construction along commercial and transportation corridors in West Long Beach."
+      },
+      {
+        "id": "2",
+        "section": "decisions",
+        "text": "The ordinance was declared urgent and will take effect immediately."
+      },
+      {
+        "id": "3",
+        "section": "decisions",
+        "text": "The matter will be referred to the Planning Commission and planning staff to initiate a study of potential amendments to existing zoning and building regulations."
+      },
+      {
+        "id": "4",
+        "section": "action_items",
+        "text": "Planning Commission and planning staff will conduct a study to align zoning and building regulations with the city's more recent land use and urban design elements of the general plan."
+      },
+      {
+        "id": "5",
+        "section": "risks",
+        "text": "The moratorium could impact development timelines and potentially affect housing supply in the targeted areas."
+      },
+      {
+        "id": "6",
+        "section": "risks",
+        "text": "There is a risk that the study may take longer than expected, delaying any potential updates to zoning and building regulations."
+      },
+      {
+        "id": "7",
+        "section": "open_questions",
+        "text": "What specific changes to zoning and building regulations are expected to result from the study?"
+      }
+    ],
+    "free_rewrite": "**Corrected Summary:**\n\n**Decisions**  \n[1] The City Council approved the ordinance establishing a 12-month moratorium on the issuance of building permits for new residential standalone construction along commercial and transportation corridors in West Long Beach.  \n[2] The ordinance was declared urgent and will take effect immediately.  \n[3] The matter will be referred to the Planning Commission and planning staff to initiate a study of potential amendments to existing zoning and building regulations.\n\n**Action Items**  \n[4] Planning Commission and planning staff will conduct a study to align zoning and building regulations with the city's more recent land use and urban design elements of the general plan.\n\n**Risks**  \n[5] The moratorium could impact development timelines and potentially affect housing supply in the targeted areas.  \n[6] There is a risk that the study may take longer than expected, delaying any potential updates to zoning and building regulations.\n\n**Open Questions**  \n[7] What specific changes to zoning and building regulations are expected to result from the study?",
+    "operations_only": "Decisions\n- The City Council approved the ordinance establishing a 12-month moratorium on the issuance of building permits for new residential standalone construction along commercial and transportation corridors in West Long Beach.\n- The ordinance was declared urgent and will take effect immediately.\n- The matter will be referred to the Planning Commission and planning staff to initiate a study of potential amendments to existing zoning and building regulations.\n\nAction Items\n- Planning Commission and planning staff will conduct a study to align zoning and building regulations with the city's more recent land use and urban design elements of the general plan."
+  },
+  "49": {
+    "claims": [
+      {
+        "id": "1",
+        "section": "decisions",
+        "text": "The council supports the execution of a Second Amendment to the Exclusive Negotiation Agreement with Howard CDB for the continuation of negotiations on the proposed development of the former Long Beach Armory."
+      },
+      {
+        "id": "2",
+        "section": "action_items",
+        "text": "Continue working with developers to finalize the project agreement and secure necessary grants."
+      },
+      {
+        "id": "3",
+        "section": "action_items",
+        "text": "Support the adaptive reuse of the Armory Building and the inclusion of 100% affordable housing."
+      },
+      {
+        "id": "4",
+        "section": "risks",
+        "text": "The project may face delays due to the need for additional time to secure state and infrastructure grants."
+      },
+      {
+        "id": "5",
+        "section": "risks",
+        "text": "There could be challenges in maintaining the momentum of negotiations with developers."
+      },
+      {
+        "id": "6",
+        "section": "open_questions",
+        "text": "What specific steps will be taken to ensure the project remains on track and meets its timeline for grant applications?"
+      }
+    ],
+    "free_rewrite": "**Corrected Summary:**\n\n**Decisions**  \n[1] The council supports the execution of a Second Amendment to the Exclusive Negotiation Agreement with Howard CDB for the continuation of negotiations on the proposed development of the former Long Beach Armory.\n\n**Action Items**  \n[2] Continue working with developers to finalize the project agreement and secure necessary grants.  \n[3] Support the adaptive reuse of the Armory Building and the inclusion of 100% affordable housing.\n\n**Risks**  \n[4] The project may face delays due to the need for additional time to secure state and infrastructure grants.\n\n**Open Questions**  \n[6] What specific steps will be taken to ensure the project remains on track and meets its timeline for grant applications?",
+    "operations_only": ""
+  }
+}

@@ -1,0 +1,182 @@
+[
+  {
+    "id": "1",
+    "section": "decisions",
+    "text": "The council approved the motion to award contracts for the purchase and delivery of new tires with an annual aggregate amount not to exceed $770,000 citywide.",
+    "draft": "44",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": true
+  },
+  {
+    "id": "2",
+    "section": "action_items",
+    "text": "The council will discuss a procurement study and allocate $250,000 for it later in the day.",
+    "draft": "44",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": false
+  },
+  {
+    "id": "3",
+    "section": "action_items",
+    "text": "The council will consider increasing local business preference in future RFPs, with a proposed increase from 5% to 15%.",
+    "draft": "44",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": false
+  },
+  {
+    "id": "4",
+    "section": "risks",
+    "text": "There is a risk that local businesses may not receive a significant portion of the contract, despite the intent to support them.",
+    "draft": "44",
+    "checker_supported": true,
+    "survives_free_rewrite": false,
+    "survives_operations_only": true
+  },
+  {
+    "id": "5",
+    "section": "risks",
+    "text": "The current local business preference may not be sufficient to meaningfully impact the local economy.",
+    "draft": "44",
+    "checker_supported": true,
+    "survives_free_rewrite": false,
+    "survives_operations_only": false
+  },
+  {
+    "id": "6",
+    "section": "open_questions",
+    "text": "How much industrial tire is the local company currently receiving under the contract?",
+    "draft": "44",
+    "checker_supported": false,
+    "survives_free_rewrite": false,
+    "survives_operations_only": false
+  },
+  {
+    "id": "7",
+    "section": "open_questions",
+    "text": "What is the current local business preference percentage in the RFPs?",
+    "draft": "44",
+    "checker_supported": false,
+    "survives_free_rewrite": false,
+    "survives_operations_only": false
+  },
+  {
+    "id": "1",
+    "section": "decisions",
+    "text": "The City Council approved the ordinance establishing a 12-month moratorium on the issuance of building permits for new residential standalone construction along commercial and transportation corridors in West Long Beach.",
+    "draft": "48",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": true
+  },
+  {
+    "id": "2",
+    "section": "decisions",
+    "text": "The ordinance was declared urgent and will take effect immediately.",
+    "draft": "48",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": true
+  },
+  {
+    "id": "3",
+    "section": "decisions",
+    "text": "The matter will be referred to the Planning Commission and planning staff to initiate a study of potential amendments to existing zoning and building regulations.",
+    "draft": "48",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": true
+  },
+  {
+    "id": "4",
+    "section": "action_items",
+    "text": "Planning Commission and planning staff will conduct a study to align zoning and building regulations with the city's more recent land use and urban design elements of the general plan.",
+    "draft": "48",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": true
+  },
+  {
+    "id": "5",
+    "section": "risks",
+    "text": "The moratorium could impact development timelines and potentially affect housing supply in the targeted areas.",
+    "draft": "48",
+    "checker_supported": false,
+    "survives_free_rewrite": true,
+    "survives_operations_only": false
+  },
+  {
+    "id": "6",
+    "section": "risks",
+    "text": "There is a risk that the study may take longer than expected, delaying any potential updates to zoning and building regulations.",
+    "draft": "48",
+    "checker_supported": false,
+    "survives_free_rewrite": true,
+    "survives_operations_only": false
+  },
+  {
+    "id": "7",
+    "section": "open_questions",
+    "text": "What specific changes to zoning and building regulations are expected to result from the study?",
+    "draft": "48",
+    "checker_supported": false,
+    "survives_free_rewrite": false,
+    "survives_operations_only": false
+  },
+  {
+    "id": "1",
+    "section": "decisions",
+    "text": "The council supports the execution of a Second Amendment to the Exclusive Negotiation Agreement with Howard CDB for the continuation of negotiations on the proposed development of the former Long Beach Armory.",
+    "draft": "49",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": false
+  },
+  {
+    "id": "2",
+    "section": "action_items",
+    "text": "Continue working with developers to finalize the project agreement and secure necessary grants.",
+    "draft": "49",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": false
+  },
+  {
+    "id": "3",
+    "section": "action_items",
+    "text": "Support the adaptive reuse of the Armory Building and the inclusion of 100% affordable housing.",
+    "draft": "49",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": false
+  },
+  {
+    "id": "4",
+    "section": "risks",
+    "text": "The project may face delays due to the need for additional time to secure state and infrastructure grants.",
+    "draft": "49",
+    "checker_supported": true,
+    "survives_free_rewrite": true,
+    "survives_operations_only": false
+  },
+  {
+    "id": "5",
+    "section": "risks",
+    "text": "There could be challenges in maintaining the momentum of negotiations with developers.",
+    "draft": "49",
+    "checker_supported": false,
+    "survives_free_rewrite": false,
+    "survives_operations_only": true
+  },
+  {
+    "id": "6",
+    "section": "open_questions",
+    "text": "What specific steps will be taken to ensure the project remains on track and meets its timeline for grant applications?",
+    "draft": "49",
+    "checker_supported": false,
+    "survives_free_rewrite": false,
+    "survives_operations_only": false
+  }
+]
