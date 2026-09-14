@@ -1,0 +1,808 @@
+{
+  "the flip: same provider, same question, three runs": [
+    {
+      "case_id": "live_multiple_489-147-4",
+      "provider": "deepinfra-fp8",
+      "run": 0,
+      "response": {
+        "id": "gen-1789266440-q6CU2OuPuxzdM9wFnx7e",
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": "I'll help you book that train ticket. Let me first verify the available trains for this route and date.\n\n",
+              "refusal": null,
+              "role": "assistant",
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "tool_calls": [
+                {
+                  "id": "chatcmpl-tool-abf708421e66b29f",
+                  "function": {
+                    "arguments": "{\"_from\": \"New York, NY\", \"to\": \"Phoenix, AZ\", \"date_of_journey\": \"04/23/2023\", \"number_of_adults\": 1}",
+                    "name": "Trains_1_FindTrains"
+                  },
+                  "type": "function",
+                  "index": 0
+                }
+              ],
+              "reasoning": "The user wants to book a train ticket from New York, NY to Phoenix, AZ on April 23rd, 2023, leaving at 13:45 for one adult, without trip protection.\n\nI need to use the Trains_1_GetTrainTickets function. Let me check the parameters:\n- _from: \"New York, NY\"\n- to: \"Phoenix, AZ\"\n- date_of_journey: \"04/23/2023\"\n- journey_start_time: \"13:45\"\n- number_of_adults: 1\n- trip_protection: false\n\nLet me book this directly. But maybe I should first find available trains to verify. Let me search for trains first to confirm availability. Actually, I can just book. But let me consider - maybe I should find trains first. The user asked to book directly. Let me use FindTrains to verify the train exists, then book.\n\nActually, let me just book it directly since the user provided all details. But it's often good practice to verify. Let me call FindTrains and GetTrainTickets. However, these are dependent - I should find trains first to confirm the train exists at that time. Let me do FindTrains first.\n\nActually, the user has given specific parameters, so I can directly book. But to be safe, let me search first. Let me call FindTrains.",
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "The user wants to book a train ticket from New York, NY to Phoenix, AZ on April 23rd, 2023, leaving at 13:45 for one adult, without trip protection.\n\nI need to use the Trains_1_GetTrainTickets function. Let me check the parameters:\n- _from: \"New York, NY\"\n- to: \"Phoenix, AZ\"\n- date_of_journey: \"04/23/2023\"\n- journey_start_time: \"13:45\"\n- number_of_adults: 1\n- trip_protection: false\n\nLet me book this directly. But maybe I should first find available trains to verify. Let me search for trains first to confirm availability. Actually, I can just book. But let me consider - maybe I should find trains first. The user asked to book directly. Let me use FindTrains to verify the train exists, then book.\n\nActually, let me just book it directly since the user provided all details. But it's often good practice to verify. Let me call FindTrains and GetTrainTickets. However, these are dependent - I should find trains first to confirm the train exists at that time. Let me do FindTrains first.\n\nActually, the user has given specific parameters, so I can directly book. But to be safe, let me search first. Let me call FindTrains.",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            },
+            "native_finish_reason": "tool_calls"
+          }
+        ],
+        "created": 1789266440,
+        "model": "deepseek/deepseek-v4-flash-0731",
+        "object": "chat.completion",
+        "metadata": null,
+        "moderation": null,
+        "service_tier": null,
+        "system_fingerprint": null,
+        "usage": {
+          "completion_tokens": 426,
+          "prompt_tokens": 2303,
+          "total_tokens": 2729,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": 0,
+            "reasoning_tokens": 284,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null,
+            "image_tokens": 0
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": 0,
+            "cached_tokens": 0,
+            "image_tokens": null,
+            "text_tokens": null,
+            "video_tokens": 0
+          },
+          "cost": 0.00021486,
+          "is_byok": false,
+          "cost_details": {
+            "upstream_inference_cost": 0.00021486,
+            "upstream_inference_prompt_cost": 0.00013818,
+            "upstream_inference_completions_cost": 7.668e-05
+          }
+        },
+        "provider": "DeepInfra"
+      }
+    },
+    {
+      "case_id": "live_multiple_489-147-4",
+      "provider": "deepinfra-fp8",
+      "run": 1,
+      "response": {
+        "id": "gen-1789360803-fx3N3wbHmfn9SBumGJsZ",
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": "I'll book that train ticket for you.\n\n",
+              "refusal": null,
+              "role": "assistant",
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "tool_calls": [
+                {
+                  "id": "chatcmpl-tool-861987864ee4b9c6",
+                  "function": {
+                    "arguments": "{\"_from\": \"New York, NY\", \"to\": \"Phoenix, AZ\", \"date_of_journey\": \"04/23/2023\", \"journey_start_time\": \"13:45\", \"number_of_adults\": 1, \"trip_protection\": false}",
+                    "name": "Trains_1_GetTrainTickets"
+                  },
+                  "type": "function",
+                  "index": 0
+                }
+              ],
+              "reasoning": "The user wants to book a train ticket from New York, NY to Phoenix, AZ on April 23rd, 2023, leaving at 13:45, for one adult, without trip protection.\n\nLet me look at the tools. I need to use Trains_1_GetTrainTickets. Let me check the parameters:\n- _from: \"New York, NY\"\n- to: \"Phoenix, AZ\"\n- date_of_journey: \"04/23/2023\"\n- journey_start_time: \"13:45\"\n- number_of_adults: 1\n- trip_protection: false\n- _class: default \"Value\"\n\nI could first find trains to confirm, but the user specified the exact time and details. Let me just book it. However, it might be good to find trains first to confirm availability. But the user directly asked to book. Let me just book the tickets.\n\nActually, let me consider whether I should search first. The user gave specific details and wants booking. I'll directly book the train ticket.",
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "The user wants to book a train ticket from New York, NY to Phoenix, AZ on April 23rd, 2023, leaving at 13:45, for one adult, without trip protection.\n\nLet me look at the tools. I need to use Trains_1_GetTrainTickets. Let me check the parameters:\n- _from: \"New York, NY\"\n- to: \"Phoenix, AZ\"\n- date_of_journey: \"04/23/2023\"\n- journey_start_time: \"13:45\"\n- number_of_adults: 1\n- trip_protection: false\n- _class: default \"Value\"\n\nI could first find trains to confirm, but the user specified the exact time and details. Let me just book it. However, it might be good to find trains first to confirm availability. But the user directly asked to book. Let me just book the tickets.\n\nActually, let me consider whether I should search first. The user gave specific details and wants booking. I'll directly book the train ticket.",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            },
+            "native_finish_reason": "tool_calls"
+          }
+        ],
+        "created": 1789360803,
+        "model": "deepseek/deepseek-v4-flash-0731",
+        "object": "chat.completion",
+        "metadata": null,
+        "moderation": null,
+        "service_tier": null,
+        "system_fingerprint": null,
+        "usage": {
+          "completion_tokens": 386,
+          "prompt_tokens": 2303,
+          "total_tokens": 2689,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": 0,
+            "reasoning_tokens": 222,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null,
+            "image_tokens": 0
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": 0,
+            "cached_tokens": 0,
+            "image_tokens": null,
+            "text_tokens": null,
+            "video_tokens": 0
+          },
+          "cost": 0.00020766,
+          "is_byok": false,
+          "cost_details": {
+            "upstream_inference_cost": 0.00020766,
+            "upstream_inference_prompt_cost": 0.00013818,
+            "upstream_inference_completions_cost": 6.948e-05
+          }
+        },
+        "provider": "DeepInfra"
+      }
+    },
+    {
+      "case_id": "live_multiple_489-147-4",
+      "provider": "deepinfra-fp8",
+      "run": 2,
+      "response": {
+        "id": "gen-1789361708-y4iDsEDuEecqCozixW2U",
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": "I'll book that train ticket for you right away.\n\n",
+              "refusal": null,
+              "role": "assistant",
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "tool_calls": [
+                {
+                  "id": "chatcmpl-tool-9a88ae8b1604d1fd",
+                  "function": {
+                    "arguments": "{\"_from\": \"New York, NY\", \"to\": \"Phoenix, AZ\", \"date_of_journey\": \"04/23/2023\", \"journey_start_time\": \"13:45\", \"number_of_adults\": 1, \"trip_protection\": false}",
+                    "name": "Trains_1_GetTrainTickets"
+                  },
+                  "type": "function",
+                  "index": 0
+                }
+              ],
+              "reasoning": "The user wants to book a train ticket from New York, NY to Phoenix, AZ on April 23rd, 2023, leaving at 13:45 for one adult, without trip protection.\n\nLet me use the GetTrainTickets function. The parameters needed:\n- _from: \"New York, NY\"\n- to: \"Phoenix, AZ\"\n- date_of_journey: \"04/23/2023\"\n- journey_start_time: \"13:45\"\n- number_of_adults: 1\n- trip_protection: false\n\nLet me book this.",
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "The user wants to book a train ticket from New York, NY to Phoenix, AZ on April 23rd, 2023, leaving at 13:45 for one adult, without trip protection.\n\nLet me use the GetTrainTickets function. The parameters needed:\n- _from: \"New York, NY\"\n- to: \"Phoenix, AZ\"\n- date_of_journey: \"04/23/2023\"\n- journey_start_time: \"13:45\"\n- number_of_adults: 1\n- trip_protection: false\n\nLet me book this.",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            },
+            "native_finish_reason": "tool_calls"
+          }
+        ],
+        "created": 1789361708,
+        "model": "deepseek/deepseek-v4-flash-0731",
+        "object": "chat.completion",
+        "metadata": null,
+        "moderation": null,
+        "service_tier": null,
+        "system_fingerprint": null,
+        "usage": {
+          "completion_tokens": 290,
+          "prompt_tokens": 2303,
+          "total_tokens": 2593,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": 0,
+            "reasoning_tokens": 122,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null,
+            "image_tokens": 0
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": 0,
+            "cached_tokens": 0,
+            "image_tokens": null,
+            "text_tokens": null,
+            "video_tokens": 0
+          },
+          "cost": 0.00019038,
+          "is_byok": false,
+          "cost_details": {
+            "upstream_inference_cost": 0.00019038,
+            "upstream_inference_prompt_cost": 0.00013818,
+            "upstream_inference_completions_cost": 5.22e-05
+          }
+        },
+        "provider": "DeepInfra"
+      }
+    }
+  ],
+  "the divergence: six providers, same question, one run": [
+    {
+      "case_id": "live_multiple_989-220-0",
+      "provider": "deepinfra-fp8",
+      "run": 0,
+      "response": {
+        "id": "gen-1789266744-BQ7enXedDmqU9T4ZguCH",
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": "I'll retrieve the list of active websites for you.\n\n",
+              "refusal": null,
+              "role": "assistant",
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "tool_calls": [
+                {
+                  "id": "chatcmpl-tool-939559e0520df420",
+                  "function": {
+                    "arguments": "{\"status_filter\": \"active\", \"include_metadata\": true}",
+                    "name": "get_websites"
+                  },
+                  "type": "function",
+                  "index": 0
+                }
+              ],
+              "reasoning": "The user wants all actively configured websites. Let me use the get_websites tool with status_filter \"active\". I should also consider whether to include metadata - probably useful. Let me include metadata for completeness.",
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "The user wants all actively configured websites. Let me use the get_websites tool with status_filter \"active\". I should also consider whether to include metadata - probably useful. Let me include metadata for completeness.",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            },
+            "native_finish_reason": "tool_calls"
+          }
+        ],
+        "created": 1789266744,
+        "model": "deepseek/deepseek-v4-flash-0731",
+        "object": "chat.completion",
+        "metadata": null,
+        "moderation": null,
+        "service_tier": null,
+        "system_fingerprint": null,
+        "usage": {
+          "completion_tokens": 118,
+          "prompt_tokens": 688,
+          "total_tokens": 806,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": 0,
+            "reasoning_tokens": 41,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null,
+            "image_tokens": 0
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": 0,
+            "cached_tokens": 0,
+            "image_tokens": null,
+            "text_tokens": null,
+            "video_tokens": 0
+          },
+          "cost": 6.252e-05,
+          "is_byok": false,
+          "cost_details": {
+            "upstream_inference_cost": 6.252e-05,
+            "upstream_inference_prompt_cost": 4.128e-05,
+            "upstream_inference_completions_cost": 2.124e-05
+          }
+        },
+        "provider": "DeepInfra"
+      }
+    },
+    {
+      "case_id": "live_multiple_989-220-0",
+      "provider": "digitalocean",
+      "run": 0,
+      "response": {
+        "id": "gen-1789266557-SwBrHyRnxYSGKlNAvph9",
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": "I'll retrieve all the actively configured websites for you.\n\n",
+              "refusal": null,
+              "role": "assistant",
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "tool_calls": [
+                {
+                  "id": "chatcmpl-tool-946605b6a7107ed0",
+                  "function": {
+                    "arguments": "{\"status_filter\": \"active\", \"include_metadata\": true}",
+                    "name": "get_websites"
+                  },
+                  "type": "function",
+                  "index": 0
+                }
+              ],
+              "reasoning": "The user wants all actively configured websites. Let me use the get_websites tool with status_filter \"active\". I'll also include metadata since it seems useful. Let me just call it.",
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "The user wants all actively configured websites. Let me use the get_websites tool with status_filter \"active\". I'll also include metadata since it seems useful. Let me just call it.",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            },
+            "native_finish_reason": "tool_calls"
+          }
+        ],
+        "created": 1789266557,
+        "model": "deepseek/deepseek-v4-flash-0731",
+        "object": "chat.completion",
+        "metadata": null,
+        "moderation": null,
+        "service_tier": null,
+        "system_fingerprint": null,
+        "usage": {
+          "completion_tokens": 114,
+          "prompt_tokens": 690,
+          "total_tokens": 804,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": 0,
+            "reasoning_tokens": 39,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null,
+            "image_tokens": 0
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": 0,
+            "cached_tokens": 256,
+            "image_tokens": null,
+            "text_tokens": null,
+            "video_tokens": 0
+          },
+          "cost": 6.9897464e-05,
+          "is_byok": false,
+          "cost_details": {
+            "upstream_inference_cost": 6.9897464e-05,
+            "upstream_inference_prompt_cost": 4.1169464e-05,
+            "upstream_inference_completions_cost": 2.8728e-05
+          }
+        },
+        "provider": "DigitalOcean"
+      }
+    },
+    {
+      "case_id": "live_multiple_989-220-0",
+      "provider": "open-inference-fp8",
+      "run": 0,
+      "response": {
+        "id": "gen-1789266551-b41mtO0OBDge0UwxOzXz",
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": "I'll retrieve all actively configured websites for you.\n\n",
+              "refusal": null,
+              "role": "assistant",
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "tool_calls": [
+                {
+                  "id": "chatcmpl-tool-ba87d157fe5de2da",
+                  "function": {
+                    "arguments": "{\"status_filter\": \"active\"}",
+                    "name": "get_websites"
+                  },
+                  "type": "function",
+                  "index": 0
+                }
+              ],
+              "reasoning": "The user wants all actively configured websites. I'll use the get_websites function with status_filter \"active\". Let me call it.",
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "The user wants all actively configured websites. I'll use the get_websites function with status_filter \"active\". Let me call it.",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            },
+            "native_finish_reason": "tool_calls"
+          }
+        ],
+        "created": 1789266551,
+        "model": "deepseek/deepseek-v4-flash-0731",
+        "object": "chat.completion",
+        "metadata": null,
+        "moderation": null,
+        "service_tier": null,
+        "system_fingerprint": "vllm-dev-ep-f9a339e3",
+        "usage": {
+          "completion_tokens": 85,
+          "prompt_tokens": 690,
+          "total_tokens": 775,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": 0,
+            "reasoning_tokens": 28,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null,
+            "image_tokens": 0
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": 0,
+            "cached_tokens": 690,
+            "image_tokens": null,
+            "text_tokens": null,
+            "video_tokens": 0
+          },
+          "cost": 9.4e-06,
+          "is_byok": false,
+          "cost_details": {
+            "upstream_inference_cost": 9.4e-06,
+            "upstream_inference_prompt_cost": 3.45e-06,
+            "upstream_inference_completions_cost": 5.95e-06
+          }
+        },
+        "provider": "OpenInference"
+      }
+    },
+    {
+      "case_id": "live_multiple_989-220-0",
+      "provider": "relace-fp4",
+      "run": 0,
+      "response": {
+        "id": "gen-1789266683-8wnoAAUQ2mYvfbklC9nE",
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": null,
+              "refusal": null,
+              "role": "assistant",
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "tool_calls": [
+                {
+                  "id": "call_7e0a81701d024582b73175da",
+                  "function": {
+                    "arguments": "{\"status_filter\": \"active\"}",
+                    "name": "get_websites"
+                  },
+                  "type": "function",
+                  "index": 0
+                }
+              ],
+              "reasoning": "The user wants all actively configured websites. I should call get_websites with status_filter \"active\". Maybe include metadata? The user just asked for all actively configured websites. I'll call get_websites with status_filter active. Let me do that.",
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "The user wants all actively configured websites. I should call get_websites with status_filter \"active\". Maybe include metadata? The user just asked for all actively configured websites. I'll call get_websites with status_filter active. Let me do that.",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            },
+            "native_finish_reason": "tool_calls"
+          }
+        ],
+        "created": 1789266683,
+        "model": "deepseek/deepseek-v4-flash-0731",
+        "object": "chat.completion",
+        "metadata": null,
+        "moderation": null,
+        "service_tier": null,
+        "system_fingerprint": null,
+        "usage": {
+          "completion_tokens": 100,
+          "prompt_tokens": 703,
+          "total_tokens": 803,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": 0,
+            "reasoning_tokens": 63,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null,
+            "image_tokens": 0
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": 0,
+            "cached_tokens": 0,
+            "image_tokens": null,
+            "text_tokens": null,
+            "video_tokens": 0
+          },
+          "cost": 3.612e-05,
+          "is_byok": false,
+          "cost_details": {
+            "upstream_inference_cost": 3.612e-05,
+            "upstream_inference_prompt_cost": 2.812e-05,
+            "upstream_inference_completions_cost": 8e-06
+          }
+        },
+        "provider": "Relace"
+      }
+    },
+    {
+      "case_id": "live_multiple_989-220-0",
+      "provider": "together",
+      "run": 0,
+      "response": {
+        "id": "gen-1789266430-6gmBo5qPKJgFBpifqt0r",
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": null,
+              "refusal": null,
+              "role": "assistant",
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "tool_calls": [
+                {
+                  "id": "call_01a09897103875238b681634",
+                  "function": {
+                    "arguments": "{\"status_filter\":\"active\"}",
+                    "name": "get_websites"
+                  },
+                  "type": "function",
+                  "index": 0
+                }
+              ],
+              "reasoning": "The user wants all actively configured websites. I should call get_websites with status_filter \"active\". Maybe include metadata? The user just said \"all the actively configured websites\" - I'll get active websites. Let me call the function.",
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "The user wants all actively configured websites. I should call get_websites with status_filter \"active\". Maybe include metadata? The user just said \"all the actively configured websites\" - I'll get active websites. Let me call the function.",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            },
+            "native_finish_reason": "tool_calls"
+          }
+        ],
+        "created": 1789266430,
+        "model": "deepseek/deepseek-v4-flash-0731",
+        "object": "chat.completion",
+        "metadata": null,
+        "moderation": null,
+        "service_tier": null,
+        "system_fingerprint": "default",
+        "usage": {
+          "completion_tokens": 97,
+          "prompt_tokens": 703,
+          "total_tokens": 800,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": 0,
+            "reasoning_tokens": 49,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null,
+            "image_tokens": 0
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": 0,
+            "cached_tokens": 0,
+            "image_tokens": null,
+            "text_tokens": null,
+            "video_tokens": 0
+          },
+          "cost": 0.00012558,
+          "is_byok": false,
+          "cost_details": {
+            "upstream_inference_cost": 0.00012558,
+            "upstream_inference_prompt_cost": 9.842e-05,
+            "upstream_inference_completions_cost": 2.716e-05
+          }
+        },
+        "provider": "Together"
+      }
+    },
+    {
+      "case_id": "live_multiple_989-220-0",
+      "provider": "wafer-fast",
+      "run": 0,
+      "response": {
+        "id": "gen-1789266750-veTtKx87j9DkJ5TG521y",
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": null,
+              "refusal": null,
+              "role": "assistant",
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "tool_calls": [
+                {
+                  "id": "call_5253998d9a224eb8bd324430",
+                  "function": {
+                    "arguments": "{\"status_filter\": \"active\"}",
+                    "name": "get_websites"
+                  },
+                  "type": "function",
+                  "index": 0
+                }
+              ],
+              "reasoning": "The user wants all actively configured websites. I'll use get_websites with status_filter active. Should I include metadata? The user didn't specify. Default include_metadata false. Let's call it.",
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "The user wants all actively configured websites. I'll use get_websites with status_filter active. Should I include metadata? The user didn't specify. Default include_metadata false. Let's call it.",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            },
+            "native_finish_reason": "tool_calls"
+          }
+        ],
+        "created": 1789266750,
+        "model": "deepseek/deepseek-v4-flash-0731",
+        "object": "chat.completion",
+        "metadata": null,
+        "moderation": null,
+        "service_tier": null,
+        "system_fingerprint": null,
+        "usage": {
+          "completion_tokens": 90,
+          "prompt_tokens": 646,
+          "total_tokens": 736,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": 0,
+            "reasoning_tokens": 43,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null,
+            "image_tokens": 0
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": 0,
+            "cached_tokens": 0,
+            "image_tokens": null,
+            "text_tokens": null,
+            "video_tokens": 0
+          },
+          "cost": 8.71e-05,
+          "is_byok": false,
+          "cost_details": {
+            "upstream_inference_cost": 8.71e-05,
+            "upstream_inference_prompt_cost": 6.46e-05,
+            "upstream_inference_completions_cost": 2.25e-05
+          }
+        },
+        "provider": "Wafer"
+      }
+    }
+  ],
+  "the missing required argument": [
+    {
+      "case_id": "live_multiple_1040-267-0",
+      "provider": "relace-fp4",
+      "run": 0,
+      "response": {
+        "id": "gen-1789266440-ehAfQaaQqoRIiVBA2qSy",
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": null,
+              "refusal": null,
+              "role": "assistant",
+              "annotations": null,
+              "audio": null,
+              "function_call": null,
+              "tool_calls": [
+                {
+                  "id": "call_26cdf99f1dbe481b9c158ebc",
+                  "function": {
+                    "arguments": "{\"experience_or_education_type\": \"Education at Universitas Sebelas Maret (UNS)\"}",
+                    "name": "detail_experience_and_education"
+                  },
+                  "type": "function",
+                  "index": 0
+                }
+              ],
+              "reasoning": "The user wants details of Adriel's education at Universitas Sebelas Maret (UNS). I should use the detail_experience_and_education function with experience_or_education_type = \"Education at Universitas Sebelas Maret (UNS)\". The experience_or_education_name is optional, default \"Not specified\". Let me call it.",
+              "reasoning_details": [
+                {
+                  "type": "reasoning.text",
+                  "text": "The user wants details of Adriel's education at Universitas Sebelas Maret (UNS). I should use the detail_experience_and_education function with experience_or_education_type = \"Education at Universitas Sebelas Maret (UNS)\". The experience_or_education_name is optional, default \"Not specified\". Let me call it.",
+                  "format": "unknown",
+                  "index": 0
+                }
+              ]
+            },
+            "native_finish_reason": "tool_calls"
+          }
+        ],
+        "created": 1789266440,
+        "model": "deepseek/deepseek-v4-flash-0731",
+        "object": "chat.completion",
+        "metadata": null,
+        "moderation": null,
+        "service_tier": null,
+        "system_fingerprint": null,
+        "usage": {
+          "completion_tokens": 135,
+          "prompt_tokens": 1512,
+          "total_tokens": 1647,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": 0,
+            "reasoning_tokens": 78,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null,
+            "image_tokens": 0
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": 0,
+            "cached_tokens": 0,
+            "image_tokens": null,
+            "text_tokens": null,
+            "video_tokens": 0
+          },
+          "cost": 7.128e-05,
+          "is_byok": false,
+          "cost_details": {
+            "upstream_inference_cost": 7.128e-05,
+            "upstream_inference_prompt_cost": 6.048e-05,
+            "upstream_inference_completions_cost": 1.08e-05
+          }
+        },
+        "provider": "Relace"
+      }
+    }
+  ]
+}
