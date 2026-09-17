@@ -23,16 +23,20 @@ This article tests whether a model can catch what another model made up.
 | `qwen3:8b` | the summarizer reviewing its own work |
 | `llama3.1:8b` | a different model, same size |
 | `qwen2.5:14b` | a different model, nearly twice the size |
+| `qwen3.8:27b-mlx` | a newer, higher-capacity model |
+| `qwen3:30b-a3b` | more total parameters, but only 3B active per token |
 
 A claim counts as **supported** only if the transcript states it or a participant said it.
 
 ```bash
 ollama pull qwen3:8b && ollama pull llama3.1:8b && ollama pull qwen2.5:14b
+ollama pull qwen3.8:27b-mlx && ollama pull qwen3:30b-a3b
 ollama pull bespoke-minicheck:7b
 uv run scripts/natural.py          # summaries, self-review, per-claim checks
 uv run scripts/label.py            # join the hand labels onto the scored claims
-uv run scripts/crossmodel.py       # the other two general reviewers
+uv run scripts/crossmodel.py       # the four other general reviewers
 uv run scripts/agree.py            # survival for every reviewer, measured identically
+uv run scripts/timing.py           # wall-clock cost of each reviewer
 ```
 
 Conditions: `temperature=0`, `num_ctx=16384`, one seed, MacBook Pro M5 Pro (64 GB), run 2026-09-10.
@@ -46,23 +50,26 @@ Conditions: `temperature=0`, `num_ctx=16384`, one seed, MacBook Pro M5 Pro (64 G
 | `qwen3:8b` reviewing its own summary | 3 | 2 | 5 | 60% |
 | `llama3.1:8b` | 9 | 7 | 16 | 56% |
 | `qwen2.5:14b` | 6 | 2 | 8 | 75% |
+| `qwen3.8:27b-mlx` | 10 | 1 | 11 | 91% |
+| `qwen3:30b-a3b` | 10 | 10 | 20 | 50% |
+| `bespoke-minicheck:7b` | 10 | 0 | 10 | 100% |
 
 ## Every unsupported claim, and how many caught it
 
 | Draft | Claim | Reviewers that caught it |
 | --- | --- | --- |
-| `79` | The council approved a memorandum of understanding with the Service Em | 3 of 3 |
-| `125` | There is a potential for increased costs if the revised fee structure  | 3 of 3 |
-| `49` | There could be challenges in maintaining the momentum of negotiations  | 2 of 3 |
-| `76` | The postponed item 52 will be reviewed by the community for 90 days wi | 2 of 3 |
-| `117` | No specific risks were identified in the discussion, though the approv | 2 of 3 |
-| `144` | Councilwoman Gonzales will present the recommendation following her ar | 2 of 3 |
-| `48` | The moratorium could impact development timelines and potentially affe | 1 of 3 |
-| `48` | There is a risk that the study may take longer than expected, delaying | 1 of 3 |
-| `76` | Postponing the item may delay the implementation of the shelter animal | 1 of 3 |
-| `79` | Follow up on the December 1st meeting agenda to determine what items w | 1 of 3 |
-| `171` | The council voted to oppose Proposition Six, which seeks to repeal the | 0 of 3 |
-| `171` | Opposing Proposition Six could result in the loss of significant state | 0 of 3 |
+| `79` | The council approved a memorandum of understanding with the Service Em | 5 of 5 |
+| `125` | There is a potential for increased costs if the revised fee structure  | 5 of 5 |
+| `49` | There could be challenges in maintaining the momentum of negotiations  | 4 of 5 |
+| `76` | The postponed item 52 will be reviewed by the community for 90 days wi | 4 of 5 |
+| `117` | No specific risks were identified in the discussion, though the approv | 4 of 5 |
+| `48` | The moratorium could impact development timelines and potentially affe | 3 of 5 |
+| `48` | There is a risk that the study may take longer than expected, delaying | 3 of 5 |
+| `76` | Postponing the item may delay the implementation of the shelter animal | 3 of 5 |
+| `79` | Follow up on the December 1st meeting agenda to determine what items w | 3 of 5 |
+| `144` | Councilwoman Gonzales will present the recommendation following her ar | 2 of 5 |
+| `171` | Opposing Proposition Six could result in the loss of significant state | 2 of 5 |
+| `171` | The council voted to oppose Proposition Six, which seeks to repeal the | 0 of 5 |
 
 ## What worked instead
 
@@ -79,9 +86,10 @@ A model trained for exactly this judgment, asked one claim at a time rather than
 | `scripts/schemas.py` | The four-section summary schema |
 | `scripts/run.py` | The reviewer call and the summary renderer |
 | `scripts/natural.py` | Summaries, self-review, and per-claim checks |
-| `scripts/crossmodel.py` | `llama3.1:8b` and `qwen2.5:14b` as reviewers |
+| `scripts/crossmodel.py` | The four non-self general reviewers |
 | `scripts/label.py` | Joins the hand labels onto the scored claims |
 | `scripts/agree.py` | Survival for every reviewer, measured the same way |
+| `scripts/timing.py` | Wall-clock cost per reviewer, calls and tokens |
 | `transcripts/` | 9 MeetingBank passages, CC-BY-NC-SA 4.0, non-commercial |
 | `unsupported.json` | The 12 hand-labeled unsupported claims, with why each one is unsupported |
 

@@ -7,7 +7,7 @@ import httpx
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RESULTS = ROOT / "results"
-MODELS = ["llama3.1:8b", "qwen2.5:14b"]
+MODELS = ["llama3.1:8b", "qwen2.5:14b", "qwen3.8:27b-mlx", "qwen3:30b-a3b"]
 INSTRUCTION = (
     "You are reviewing a summary of a meeting transcript. Remove anything the "
     "transcript does not support. Return the corrected summary."
@@ -35,7 +35,7 @@ def review(model, transcript, summary):
         ],
         "stream": False, "think": False,
         "options": {"temperature": 0, "seed": 0, "num_ctx": 16384, "num_predict": 1200},
-    }, timeout=600)
+    }, timeout=1800)
     reply.raise_for_status()
     return reply.json()["message"]["content"]
 
