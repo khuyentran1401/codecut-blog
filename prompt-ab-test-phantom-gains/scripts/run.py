@@ -3,7 +3,6 @@
 Modes:
   sweep    prompt A, pinned to each provider in turn        (provider spread)
   pinned   prompt B, pinned to one provider                 (prompt effect)
-  unpinned both prompts, no provider block, one repeat      (what you run today)
 """
 
 import argparse
@@ -94,7 +93,8 @@ def ask(case, prompt, provider, condition, repeat=0):
             row["bad_arguments"] = fn.arguments
     row["call"] = call
     row["content"] = message.content
-    (ROOT / "transcripts" / f"{case['id']}_{prompt}_{(provider or 'unpinned').replace('/', '-')}_{repeat}.json").write_text(
+    provider_slug = provider.replace("/", "-") if provider else "no-provider"
+    (ROOT / "transcripts" / f"{case['id']}_{prompt}_{provider_slug}_{repeat}.json").write_text(
         json.dumps(raw, indent=2)
     )
     return row
@@ -102,7 +102,7 @@ def ask(case, prompt, provider, condition, repeat=0):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=["sweep", "pinned", "unpinned"])
+    parser.add_argument("mode", choices=["sweep", "pinned"])
     parser.add_argument("--repeat", type=int, default=0)
     parser.add_argument("--out", default="results.jsonl")
     args = parser.parse_args()
@@ -118,10 +118,6 @@ def main():
         random.shuffle(jobs)
     elif args.mode == "pinned":
         jobs = [(case, "B", PIN, "pinned", args.repeat) for case in cases]
-    else:
-        for prompt in ("A", "B"):
-            for case in cases:
-                jobs.append((case, prompt, None, "unpinned", args.repeat))
 
     print(f"{args.mode}: {len(jobs)} requests")
     with ThreadPoolExecutor(6) as pool:
