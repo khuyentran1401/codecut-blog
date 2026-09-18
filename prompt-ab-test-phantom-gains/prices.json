@@ -1,0 +1,12 @@
+{
+  "_source": "OpenRouter endpoint listing for deepseek/deepseek-v4-flash-0731, read when the provider sweep ran in September 2026. Prices are USD per million input tokens.",
+  "_why_frozen": "The run scripts never recorded price, so these six numbers would otherwise live only in the article's prose. Endpoint prices change, so they are frozen here to keep the chart matching the runs they describe rather than tracking today's rates.",
+  "usd_per_million_input_tokens": {
+    "digitalocean": 0.08,
+    "relace/fp4": 0.06,
+    "together": 0.14,
+    "open-inference/fp8": 0.04,
+    "deepinfra/fp8": 0.06,
+    "wafer/fast": 0.10
+  }
+}
