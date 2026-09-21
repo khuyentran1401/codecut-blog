@@ -1,0 +1,5 @@
+{"id": "1", "task": "let admins impersonate a user for support"}
+{"id": "2", "task": "correct timezone handling in the daily report"}
+{"id": "3", "task": "send a welcome email after signup"}
+{"id": "4", "task": "remove the unused legacy auth module"}
+{"id": "5", "task": "warn when a password is reused"}
