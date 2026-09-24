@@ -23,8 +23,8 @@ from induction import INDUCTION
 ROOT = Path(__file__).resolve().parent.parent
 FRONTMATTER = re.compile(r"^---\n.*?\n---\n", re.S)
 TURN_COUNTS = [0, 2, 4, 6, 8, 10, 15, 20]
-CLEAN_AT = [10, 20]
-CORRECTED_AT = [2, 6, 10, 20]
+CLEAN_AT = TURN_COUNTS
+CORRECTED_AT = TURN_COUNTS
 
 
 def skill_body(name="commit-message"):
@@ -71,15 +71,23 @@ def main():
     parser.add_argument("--runs", type=int, default=5)
     parser.add_argument("--out", default="results-session.jsonl")
     parser.add_argument("--cases", default="cases.jsonl")
+    parser.add_argument("--resume", action="store_true",
+                        help="append to --out, skipping (turns, kind) cells it already holds")
     args = parser.parse_args()
 
     system = skill_body()
     cases = [json.loads(line) for line in (ROOT / args.cases).read_text().splitlines() if line]
-    out = (ROOT / args.out).open("w")
+    out_path = ROOT / args.out
+    done_cells = set()
+    if args.resume and out_path.exists():
+        done_cells = {(json.loads(line)["turns"], json.loads(line)["kind"])
+                      for line in out_path.read_text().splitlines() if line}
+    out = out_path.open("a" if args.resume else "w")
 
     plan = ([(t, "conflict") for t in TURN_COUNTS]
             + [(t, "clean") for t in CLEAN_AT]
             + [(t, "corrected") for t in CORRECTED_AT])
+    plan = [cell for cell in plan if cell not in done_cells]
     total = len(plan) * len(cases) * args.runs
     done = 0
 
