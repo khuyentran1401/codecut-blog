@@ -1,0 +1,11 @@
+[
+  {"kind": "user", "item": "--config flag for a pyproject.toml path", "find": "--config"},
+  {"kind": "user", "item": "whitelist for ssl.SSLContext", "find": "SSLContext"},
+  {"kind": "user", "item": "while True loops / reachability", "find": "while True|improved reachability|reachability analysis"},
+  {"kind": "judgment", "item": "Python 3.13 and 3.14 support, 3.8 dropped", "find": "3\\.13|3\\.14|3\\.8"},
+  {"kind": "judgment", "item": "type hints for get_unused_code and Item", "find": "type hint|get_unused_code"},
+  {"kind": "judgment", "item": "PyPI and conda-forge badges", "find": "conda-forge"},
+  {"kind": "internal", "item": "ruff for linting, more ruff rules", "find": "ruff"},
+  {"kind": "internal", "item": "tox replaced by pre-commit for linting", "find": "\\btox\\b|linting and formatting"},
+  {"kind": "internal", "item": "tests/**/*.toml in sdist", "find": "sdist"}
+]

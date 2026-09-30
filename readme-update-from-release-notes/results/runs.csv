@@ -1,0 +1,16 @@
+version,run,seconds,model_calls
+all_at_once,1,87,1
+all_at_once,2,99,1
+all_at_once,3,95,1
+section_by_section,1,82,20
+section_by_section,2,89,23
+section_by_section,3,35,16
+change_by_change,1,175,55
+change_by_change,2,95,30
+change_by_change,3,81,21
+change_by_change_screened,1,225,64
+change_by_change_screened,2,207,49
+change_by_change_screened,3,202,62
+full_rewrite,1,89,1
+full_rewrite,2,91,1
+full_rewrite,3,86,1
