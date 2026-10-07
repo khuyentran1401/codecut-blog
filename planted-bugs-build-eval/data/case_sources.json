@@ -1,0 +1,77 @@
+[
+  {
+    "id": "case_01",
+    "banking77_row": 1971,
+    "banking77_intent": "transaction_charged_twice"
+  },
+  {
+    "id": "case_02",
+    "banking77_row": 10,
+    "banking77_intent": "card_arrival"
+  },
+  {
+    "id": "case_03",
+    "banking77_row": 652,
+    "banking77_intent": "pending_top_up"
+  },
+  {
+    "id": "case_04",
+    "banking77_row": 1907,
+    "banking77_intent": "terminate_account"
+  },
+  {
+    "id": "case_05",
+    "banking77_row": 2294,
+    "banking77_intent": "failed_transfer"
+  },
+  {
+    "id": "case_06",
+    "banking77_row": 167,
+    "banking77_intent": "extra_charge_on_statement"
+  },
+  {
+    "id": "case_07",
+    "banking77_row": 445,
+    "banking77_intent": "lost_or_stolen_card"
+  },
+  {
+    "id": "case_08",
+    "banking77_row": 844,
+    "banking77_intent": "transfer_not_received_by_recipient"
+  },
+  {
+    "id": "case_09",
+    "banking77_row": 1545,
+    "banking77_intent": "passcode_forgotten"
+  },
+  {
+    "id": "case_10",
+    "banking77_row": 1121,
+    "banking77_intent": "edit_personal_details"
+  },
+  {
+    "id": "case_11",
+    "banking77_row": 1688,
+    "banking77_intent": "request_refund"
+  },
+  {
+    "id": "case_12",
+    "banking77_row": 2802,
+    "banking77_intent": "top_up_by_card_charge"
+  },
+  {
+    "id": "case_13",
+    "banking77_row": 1935,
+    "banking77_intent": "card_swallowed"
+  },
+  {
+    "id": "case_14",
+    "banking77_row": 689,
+    "banking77_intent": "cancel_transfer"
+  },
+  {
+    "id": "case_15",
+    "banking77_row": 2652,
+    "banking77_intent": "top_up_failed"
+  }
+]

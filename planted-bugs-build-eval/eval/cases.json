@@ -1,0 +1,77 @@
+[
+  {
+    "id": "case_01",
+    "email": "I have been charged twice",
+    "expected": "billing"
+  },
+  {
+    "id": "case_02",
+    "email": "How do I track my card?",
+    "expected": "cards"
+  },
+  {
+    "id": "case_03",
+    "email": "My top up is pending.",
+    "expected": "top-up"
+  },
+  {
+    "id": "case_04",
+    "email": "Please delete my account.",
+    "expected": "account"
+  },
+  {
+    "id": "case_05",
+    "email": "Why did my transfer fail?",
+    "expected": "transfers"
+  },
+  {
+    "id": "case_06",
+    "email": "What is this $1 charge on my statement?",
+    "expected": "billing"
+  },
+  {
+    "id": "case_07",
+    "email": "I lost my card",
+    "expected": "cards"
+  },
+  {
+    "id": "case_08",
+    "email": "I tried to send someone money but they haven't received it.",
+    "expected": "transfers"
+  },
+  {
+    "id": "case_09",
+    "email": "I forgot my password",
+    "expected": "billing"
+  },
+  {
+    "id": "case_10",
+    "email": "How to change my address.",
+    "expected": "account"
+  },
+  {
+    "id": "case_11",
+    "email": "Can I have a refund?",
+    "expected": "billing"
+  },
+  {
+    "id": "case_12",
+    "email": "i was charged when i used a us issued card. why and what cards are free to use to add money",
+    "expected": "top-up"
+  },
+  {
+    "id": "case_13",
+    "email": "The ATM ate my card.",
+    "expected": "cards"
+  },
+  {
+    "id": "case_14",
+    "email": "How can I cancel a transfer?",
+    "expected": "transfers"
+  },
+  {
+    "id": "case_15",
+    "email": "My top up failed.",
+    "expected": "top-up"
+  }
+]

@@ -1,0 +1,5 @@
+**/traces/
+report.html
+state.json
+trajectory/
+__pycache__/

@@ -1,0 +1,21 @@
+{
+  "flow": "router",
+  "metrics": [
+    {
+      "id": "accuracy",
+      "label": "Queue correct",
+      "kind": "binary"
+    },
+    {
+      "id": "format_ok",
+      "label": "Format OK",
+      "kind": "binary"
+    }
+  ],
+  "perf_fields": [],
+  "harness_paths": [
+    "grader.py",
+    "cases.json"
+  ],
+  "harness_sha": "c139c391603d3d9e4b48c58fdd16bfb35d9a62634d8404de04e1cd79367166c7"
+}
