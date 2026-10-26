@@ -1,0 +1,51 @@
+{
+  "id": "asof-join",
+  "title": "Asof join question",
+  "messages": [
+    {
+      "message": {
+        "message": {
+          "role": "user",
+          "content": "How do I match each trade to the most recent quote before it?"
+        }
+      }
+    },
+    {
+      "message": {
+        "agent_name": "root",
+        "message": {
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_1",
+              "type": "function",
+              "function": {
+                "name": "polars_docs",
+                "arguments": "{\"query\": \"match trade to most recent quote join_asof\"}"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "evals": {
+    "assertions": [
+      {
+        "name": "names join_asof",
+        "type": "contains",
+        "value": "join_asof"
+      },
+      {
+        "name": "cites joins page",
+        "type": "contains",
+        "value": "transformations/joins.md"
+      },
+      {
+        "name": "searched the docs",
+        "type": "tool_called",
+        "value": "polars_docs"
+      }
+    ]
+  }
+}
