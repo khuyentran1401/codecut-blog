@@ -1,51 +1,13 @@
 {
-  "id": "streaming-parquet",
   "title": "Large Parquet file question",
   "messages": [
-    {
-      "message": {
-        "message": {
-          "role": "user",
-          "content": "How do I read a Parquet file without loading it all into memory?"
-        }
-      }
-    },
-    {
-      "message": {
-        "agent_name": "root",
-        "message": {
-          "role": "assistant",
-          "tool_calls": [
-            {
-              "id": "call_1",
-              "type": "function",
-              "function": {
-                "name": "polars_docs",
-                "arguments": "{\"query\": \"read parquet without loading into memory scan_parquet\"}"
-              }
-            }
-          ]
-        }
-      }
-    }
+    {"message": {"message": {"role": "user", "content": "How do I read a Parquet file without loading it all into memory?"}}}
   ],
   "evals": {
     "assertions": [
-      {
-        "name": "uses scan_parquet",
-        "type": "contains",
-        "value": "scan_parquet"
-      },
-      {
-        "name": "mentions streaming",
-        "type": "contains",
-        "value": "streaming"
-      },
-      {
-        "name": "searched the docs",
-        "type": "tool_called",
-        "value": "polars_docs"
-      }
+      { "name": "uses scan_parquet", "type": "contains", "value": "scan_parquet" },
+      { "name": "mentions streaming", "type": "contains", "value": "streaming" },
+      { "name": "searched the docs", "type": "tool_called", "value": "polars_docs" }
     ]
   }
 }

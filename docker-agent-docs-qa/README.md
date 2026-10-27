@@ -8,8 +8,7 @@ An agent that answers questions about Polars by searching the Polars user guide.
 
 ```text
 docker-agent-docs-qa/
-├── embeddings.yaml          # agent with embedding search
-├── hybrid.yaml              # same agent with embedding + keyword search
+├── embeddings.yaml          # root and reviewer agents, plus hybrid and cheap flavors
 ├── evals/
 │   ├── asof-join.json       # test: asof join question
 │   └── streaming-parquet.json  # test: large Parquet file question
@@ -42,7 +41,8 @@ docker-agent-docs-qa/
 
 ```bash
 docker agent run --exec embeddings.yaml "How do I read a Parquet file without loading it all into memory?"
-docker agent run --exec hybrid.yaml "When should I use join_asof?"
+docker agent run --exec embeddings.yaml --flavor hybrid "When should I use join_asof?"
+docker agent run --exec embeddings.yaml --agent reviewer 'Review this code: df = pl.read_parquet("big.parquet").filter(pl.col("amount") > 0)'
 ```
 
 ## Test
@@ -50,8 +50,8 @@ docker agent run --exec hybrid.yaml "When should I use join_asof?"
 The evals run in containers, so Docker must be running:
 
 ```bash
-docker agent eval hybrid.yaml ./evals
-docker agent eval hybrid.yaml ./evals --repeat 3
+docker agent eval embeddings.yaml ./evals
+docker agent eval embeddings.yaml ./evals --flavor cheap --repeat 3
 ```
 
 ## License

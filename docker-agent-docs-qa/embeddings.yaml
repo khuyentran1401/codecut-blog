@@ -10,6 +10,17 @@ agents:
     toolsets:
       - type: rag
         ref: polars_docs
+  reviewer:
+    model: openai/gpt-5
+    description: Reviews Polars code against the user guide
+    instruction: |
+      You review Polars code.
+      Search the docs for each function the code uses.
+      Point out slower or outdated patterns and suggest the fix the docs recommend.
+      End with a "Sources:" list of the file paths you used, relative to docs/polars.
+    toolsets:
+      - type: rag
+        ref: polars_docs
 
 rag:
   polars_docs:
@@ -20,3 +31,20 @@ rag:
       - type: chunked-embeddings
         embedding_model: openai/text-embedding-3-small
         vector_dimensions: 1536
+
+flavors:
+  hybrid:
+    rag:
+      polars_docs:
+        strategies+:
+          - type: bm25
+        results:
+          fusion:
+            strategy: rrf
+            k: 60
+          deduplicate: true
+          limit: 5
+  cheap:
+    agents:
+      root:
+        model: openai/gpt-5-nano
