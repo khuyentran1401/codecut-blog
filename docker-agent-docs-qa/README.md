@@ -1,6 +1,6 @@
 # Polars Docs Agent with docker-agent
 
-Code for the CodeCut article [Build a Docs Q&A Agent Using docker-agent](https://codecut.ai/docker-agent-docs-qa-rag/).
+Code for the CodeCut article [Build AI Agents in YAML with docker-agent](https://codecut.ai/build-ai-agents-yaml-docker-agent/).
 
 An agent that answers questions about Polars by searching the Polars user guide. The whole agent is one YAML file.
 
