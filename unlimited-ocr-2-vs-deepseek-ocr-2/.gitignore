@@ -1,0 +1,6 @@
+pdfs/
+pages/
+results/
+scripts/process_unlimitedOCR2.py
+__pycache__/
+.venv/
