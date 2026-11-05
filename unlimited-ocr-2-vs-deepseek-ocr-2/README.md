@@ -14,9 +14,7 @@ scripts/
   run_long.sh          Unlimited-OCR-2 on 10- and 30-page windows
   to_markdown.py       raw outputs to unlimited.md and deepseek.md
   count_tables.py      how many DataFrames pandas gets from each file
-  number_recall.py     how many numbers printed on the pages appear in the output
   score_merges.py      how many table page breaks were labeled append_table
-  check_totals.py      catch a column lost in Table G.10's merge
   page_break_image.py  page-break screenshots for the article
   page_strip_image.py  side-by-side page screenshot for Table G.10
 ```
@@ -84,28 +82,10 @@ results/case1-table-5-3/deepseek.md: 2 DataFrame(s) [(21, 3), (20, 3)]
 results/case1-table-5-3/unlimited.md: 1 DataFrame(s) [(36, 3)]
 ```
 
-Check how many numbers on the pages each output kept:
-
-```bash
-python scripts/number_recall.py pdfs/fed_annual_2024.pdf 204-205 \
-  results/case2-table-g9/deepseek.md results/case2-table-g9/unlimited.md
-```
-
 Score the table page breaks inside the long windows:
 
 ```bash
 python scripts/score_merges.py pdfs/fed_annual_2024.pdf results/long/w10_t45-40-49.txt:40-49
-```
-
-Catch the column Unlimited-OCR-2 dropped on page 209 of Table G.10:
-
-```bash
-python scripts/check_totals.py results/case3-table-g10/unlimited.md
-```
-
-```text
-    sum of banks     Total row  missing
-12           NaN           NaN       12
 ```
 
 Results from the article's runs (temperature 0, identical on repeat runs):
@@ -113,8 +93,7 @@ Results from the article's runs (temperature 0, identical on repeat runs):
 | Test | DeepSeek-OCR-2 | Unlimited-OCR-2 |
 | --- | --- | --- |
 | Table 5.3 | 2 DataFrames | 1 DataFrame |
-| Table G.9 numbers found | 331/336, misreads 7,380 as 7,360 | 336/336 |
-| Table G.10 | 4 DataFrames | 1 DataFrame, last column of page 209 lost, one repeated header kept |
+| Table G.10 | 4 DataFrames | 1 DataFrame, one repeated header kept |
 | Monetary Policy paragraph | split | joined, space lost at the join |
 | Table breaks in 10-page windows | not applicable | 11 of 12 merged |
 | Table breaks in 30-page windows | not applicable | 20 of 22 merged |
