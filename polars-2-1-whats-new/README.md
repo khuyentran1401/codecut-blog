@@ -1,6 +1,6 @@
-# What's New in Polars 2.1
+# What's New in Polars 2.x
 
-Code for the CodeCut article "What's New in Polars 2.1: Group-Bys That Spill, Fuller SQL, and Encrypted Parquet".
+Code for the CodeCut article "What's New in Polars 2.x: Faster Group-Bys, Spilling Joins, More SQL".
 
 ## Files
 
@@ -8,6 +8,8 @@ Code for the CodeCut article "What's New in Polars 2.1: Group-Bys That Spill, Fu
 polars-2-1-whats-new/
 ├── download_data.sh   # downloads Jan to Oct 2024 NYC taxi trips and the zone lookup into data/
 ├── groupby.py         # route-by-hour group-by over 10 months (33M rows)
+├── make_trip_tables.py # copies the 33M trips three times (~100M) and splits them into rides and payments tables
+├── join.py            # joins rides to payments on trip_id (needs Polars 2.2 to spill)
 ├── sql_queries.py     # read_parquet with a list of paths, DATE_TRUNC, generate_series
 ├── encrypt.py         # writes and reads a Parquet file with encrypted payment columns
 ├── join_where_full.py # range join that keeps unmatched rows from both sides
@@ -17,10 +19,10 @@ polars-2-1-whats-new/
 
 ## Setup
 
-1. Install Polars 2.1:
+1. Install Polars 2.2 (the other scripts also run on 2.1):
 
    ```bash
-   pip install polars==2.1.0 numpy
+   pip install polars==2.2.0 numpy
    ```
 
 2. Download the data (about 540 MB):
@@ -47,6 +49,13 @@ POLARS_OOC_MEMORY_BUDGET_MB=500 /usr/bin/time -l python groupby.py
 ```
 
 Add `POLARS_OOC_LOG_METRICS=1` to print how much data was written to disk.
+
+To compare the join on 2.1 and 2.2 under a 1 GB memory budget, build the tables once (about 2.3 GB on disk), then run `join.py` in each environment:
+
+```bash
+python make_trip_tables.py
+POLARS_OOC_MEMORY_BUDGET_MB=1000 /usr/bin/time -l python join.py
+```
 
 To time each quantile method on its own:
 
